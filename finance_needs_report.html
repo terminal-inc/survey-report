@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>資金繰り・経理業務アンケート レポート</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --surface: #f7f8fa;
+  --surface2: #eef0f4;
+  --border: #d8dce6;
+  --text: #1a1a2e;
+  --text-muted: #5a6178;
+  --accent: #3561d4;
+  --accent2: #6c5ce7;
+  --accent3: #00a19a;
+  --accent4: #e05888;
+  --accent5: #d4a017;
+  --accent6: #2eaa8a;
+  --section-num: #3561d4;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hero */
+.hero {
+  padding: 60px 40px 40px;
+  background: linear-gradient(135deg, #f0f2f8 0%, #e8ecf6 50%, #f0f2f8 100%);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(53,97,212,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.hero-meta {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+.hero-meta span {
+  display: inline-block;
+  background: var(--surface2);
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-right: 8px;
+  margin-top: 8px;
+  border: 1px solid var(--border);
+}
+
+/* Nav */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.nav a {
+  display: inline-block;
+  padding: 14px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.nav a:hover, .nav a.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Content */
+.content { max-width: 1200px; margin: 0 auto; padding: 40px 40px 80px; }
+
+.section {
+  margin-bottom: 56px;
+  animation: fadeUp 0.5s ease both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(20px); }
+  to { opacity:1; transform: translateY(0); }
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--section-num);
+  opacity: 0.7;
+  min-width: 48px;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Chart Grid */
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  gap: 24px;
+}
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.chart-card:hover {
+  border-color: rgba(53,97,212,0.3);
+  box-shadow: 0 4px 24px rgba(53,97,212,0.08);
+}
+.chart-card.wide {
+  grid-column: 1 / -1;
+}
+.chart-question {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.chart-type-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #00807a;
+  background: rgba(0,161,154,0.1);
+  padding: 2px 10px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+.chart-container.pie-container {
+  max-width: 360px;
+  margin: 0 auto;
+}
+.chart-container canvas {
+  width: 100% !important;
+}
+
+/* Stacked comparison */
+.stacked-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+.stacked-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+.stacked-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: right;
+}
+.stacked-bar-wrap {
+  display: flex;
+  height: 32px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--surface2);
+}
+.stacked-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  transition: width 0.6s ease;
+  min-width: 0;
+}
+.stacked-seg span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; }
+.stacked-legend {
+  display: flex;
+  gap: 20px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.stacked-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.stacked-legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 3px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .hero { padding: 32px 20px 28px; }
+  .hero h1 { font-size: 20px; }
+  .nav { padding: 0 16px; }
+  .content { padding: 24px 16px 60px; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .stacked-row { grid-template-columns: 120px 1fr; }
+  .exec-inner { padding: 24px 16px 32px; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .insight-grid { grid-template-columns: 1fr; }
+  .svc-inner { padding: 24px 16px 32px; }
+  .svc-cross-grid { grid-template-columns: 1fr; }
+  .svc-bar-row { grid-template-columns: 1fr; gap: 4px; }
+  .svc-bar-label { text-align: left; }
+  .svc-bar-detail { font-size: 11px; }
+  .svc-table { font-size: 11px; }
+  .svc-table thead th, .svc-table tbody td { padding: 8px 6px; }
+}
+
+/* Executive Summary */
+.exec-summary {
+  background: linear-gradient(135deg, #f6f8fc 0%, #edf1fa 100%);
+  border-bottom: 1px solid var(--border);
+}
+.exec-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 40px 56px;
+}
+.exec-header {
+  margin-bottom: 36px;
+}
+.exec-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.exec-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.exec-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 640px;
+}
+
+/* KPI Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.kpi-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.kpi-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.1;
+}
+.kpi-unit {
+  font-size: 18px;
+  font-weight: 500;
+  margin-left: 2px;
+}
+.kpi-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* Insight Cards */
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.insight-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  transition: box-shadow 0.3s;
+}
+.insight-card:hover {
+  box-shadow: 0 4px 16px rgba(53,97,212,0.08);
+}
+.insight-card.wide {
+  grid-column: 1 / -1;
+}
+.insight-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface2);
+  border-radius: 10px;
+}
+.insight-content h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.insight-content p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+.insight-content strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Service Acceptability Section */
+.svc-section {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+}
+.svc-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 40px 56px;
+}
+
+/* Overview bars */
+.svc-overview-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 28px;
+}
+.svc-overview-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.svc-overview-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.svc-bar-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 240px;
+  align-items: center;
+  gap: 14px;
+}
+.svc-bar-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+}
+.svc-bar-track {
+  height: 34px;
+  background: var(--surface2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.svc-bar-fill {
+  height: 100%;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 12px;
+  transition: width 0.8s ease;
+}
+.svc-bar-fill span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+.svc-color-1 { background: linear-gradient(90deg, #3561d4, #5b8af5); }
+.svc-color-2 { background: linear-gradient(90deg, #00a19a, #2ecec6); }
+.svc-color-3 { background: linear-gradient(90deg, #6c5ce7, #9b8ff5); }
+.svc-color-4 { background: linear-gradient(90deg, #e05888, #f08aae); }
+.svc-bar-detail {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Cross-analysis cards */
+.svc-cross-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.svc-cross-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.svc-cross-card.wide {
+  grid-column: 1 / -1;
+}
+.svc-cross-header {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 18px;
+  align-items: flex-start;
+}
+.svc-cross-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface2);
+  border-radius: 10px;
+}
+.svc-cross-header h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.svc-cross-insight {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Tables */
+.svc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+.svc-table thead th {
+  background: var(--surface);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 2px solid var(--border);
+}
+.svc-table thead th:first-child {
+  text-align: left;
+  border-radius: 8px 0 0 0;
+}
+.svc-table thead th:last-child {
+  border-radius: 0 8px 0 0;
+}
+.svc-table .th-sub {
+  font-weight: 400;
+  font-size: 10px;
+  color: #8891ad;
+}
+.svc-table tbody td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid var(--surface2);
+  color: var(--text);
+}
+.svc-table tbody td:first-child {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.svc-highlight {
+  font-weight: 700 !important;
+  color: #1a6b3c !important;
+  background: rgba(46,170,138,0.08);
+}
+.svc-low {
+  color: #b03a3a !important;
+  background: rgba(224,88,136,0.06);
+}
+.svc-diff-up {
+  font-weight: 700 !important;
+  color: #1a6b3c !important;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.svc-takeaway {
+  font-size: 13px;
+  color: var(--text);
+  background: linear-gradient(90deg, rgba(53,97,212,0.06), rgba(53,97,212,0.02));
+  border-left: 3px solid var(--accent);
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  line-height: 1.7;
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">Survey Report</div>
+  <h1>資金繰り・経理業務アンケート 結果レポート</h1>
+  <div class="hero-meta">
+    <span>回答数 75件</span>
+    <span>全8セクション・31設問</span>
+    <span>2026年3月実施</span>
+  </div>
+</div>
+
+<nav class="nav" id="nav"></nav>
+
+<!-- Executive Summary -->
+<div class="exec-summary" id="section-summary">
+  <div class="exec-inner">
+    <div class="exec-header">
+      <div class="exec-label">Executive Summary</div>
+      <h2 class="exec-title">エグゼクティブサマリ</h2>
+      <p class="exec-subtitle">ファッション業界 BtoB事業者75社のアンケート結果から見える資金繰りの実態とサービスニーズ</p>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-value">75<span class="kpi-unit">社</span></div>
+        <div class="kpi-label">有効回答数</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">81<span class="kpi-unit">%</span></div>
+        <div class="kpi-label">5年以上の事業歴</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">89<span class="kpi-unit">%</span></div>
+        <div class="kpi-label">年商1億円以上</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">51<span class="kpi-unit">%</span></div>
+        <div class="kpi-label">支払いが先に発生</div>
+      </div>
+    </div>
+
+    <!-- Insight Blocks -->
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="insight-icon">📊</div>
+        <div class="insight-content">
+          <h3>回答者プロファイル</h3>
+          <p>回答の<strong>99%が法人</strong>、<strong>80%が従業員11名以上</strong>の中堅〜大手企業。年商5億円以上が60%を占め、ファッション業界の主要プレイヤーが中心。事業歴5年以上が81%と、成熟した事業者が大半を占める。</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">💰</div>
+        <div class="insight-content">
+          <h3>キャッシュフローの構造的課題</h3>
+          <p><strong>51%が「支払いが先に発生」</strong>と回答。受注〜入金まで2ヶ月以上かかるケースが85%に達し、<strong>入金遅延経験ありが64%</strong>（よくある5%＋たまにある59%）。季節変動も92%が「ある」と回答しており、資金繰りの不確実性が常態化。</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">🏦</div>
+        <div class="insight-content">
+          <h3>資金調達の現状と課題</h3>
+          <p>過去1年で資金繰りに困った経験は<strong>19%（14社）</strong>。手段は<strong>銀行融資が圧倒的（93%）</strong>で選択肢が限定的。融資申請で苦労した経験では「書類準備が大変」「審査に時間がかかりすぎた」が上位。想定ニーズ額は<strong>57%が500万円以上</strong>。</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">🎯</div>
+        <div class="insight-content">
+          <h3>サービス受容性 — 潜在ニーズあり</h3>
+          <p>4サービスとも<strong>「ぜひ＋必要があれば利用したい」が過半数</strong>。特に<strong>売上連動型資金調達（55%）</strong>と<strong>請求書カード払い（55%）</strong>が高い。一方Web完結型サービスへの不安は55%が感じており、<strong>安心感の訴求が導入の鍵</strong>。</p>
+        </div>
+      </div>
+      <div class="insight-card wide">
+        <div class="insight-icon">💡</div>
+        <div class="insight-content">
+          <h3>示唆：ターゲットと訴求ポイント</h3>
+          <p>100万円即日調達の使い道は「広告・販促強化」33%、「運転資金確保」29%が上位。最も負担が大きい支出は<strong>「仕入れ・材料費・外注費」59%</strong>。仕入れ→製造→販売の長いリードタイムに対し、<strong>「支払いサイクルのギャップを埋める」資金ソリューション</strong>の訴求が有効。注文書ベースの取引が91%で行われており、注文書ファクタリングの実務適合性も高い。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service Acceptability Deep Dive -->
+<div class="svc-section" id="section-services">
+  <div class="svc-inner">
+    <div class="exec-header">
+      <div class="exec-label">Service Acceptability</div>
+      <h2 class="exec-title">ファイナンスサービス受容性 詳細分析</h2>
+      <p class="exec-subtitle">4つの資金調達サービスに対する利用意向を、属性別クロス集計で深掘りします</p>
+    </div>
+
+    <!-- Overview comparison chart -->
+    <div class="svc-overview-card">
+      <h3>サービス別ポジティブ率（ぜひ利用したい＋必要があれば利用したい）</h3>
+      <div class="svc-overview-bars">
+        <div class="svc-bar-row">
+          <div class="svc-bar-label">請求書カード払い</div>
+          <div class="svc-bar-track">
+            <div class="svc-bar-fill svc-color-1" style="width:55%">
+              <span>55%</span>
+            </div>
+          </div>
+          <div class="svc-bar-detail">ぜひ 5 ／ 必要あれば 36 ／ 利用しない 34</div>
+        </div>
+        <div class="svc-bar-row">
+          <div class="svc-bar-label">売上連動型資金調達</div>
+          <div class="svc-bar-track">
+            <div class="svc-bar-fill svc-color-2" style="width:55%">
+              <span>55%</span>
+            </div>
+          </div>
+          <div class="svc-bar-detail">ぜひ 2 ／ 必要あれば 39 ／ 利用しない 34</div>
+        </div>
+        <div class="svc-bar-row">
+          <div class="svc-bar-label">請求書ファクタリング</div>
+          <div class="svc-bar-track">
+            <div class="svc-bar-fill svc-color-3" style="width:52%">
+              <span>52%</span>
+            </div>
+          </div>
+          <div class="svc-bar-detail">ぜひ 4 ／ 必要あれば 35 ／ 利用しない 36</div>
+        </div>
+        <div class="svc-bar-row">
+          <div class="svc-bar-label">注文書ファクタリング</div>
+          <div class="svc-bar-track">
+            <div class="svc-bar-fill svc-color-4" style="width:47%">
+              <span>47%</span>
+            </div>
+          </div>
+          <div class="svc-bar-detail">ぜひ 2 ／ 必要あれば 33 ／ 利用しない 40</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cross-analysis cards -->
+    <div class="svc-cross-grid">
+
+      <!-- Card 1: 資金繰り困難経験別 -->
+      <div class="svc-cross-card">
+        <div class="svc-cross-header">
+          <div class="svc-cross-icon">🔥</div>
+          <div>
+            <h4>資金繰り困難経験別の受容性</h4>
+            <p class="svc-cross-insight">困った経験がある企業は、全サービスで大幅にポジティブ率が上昇</p>
+          </div>
+        </div>
+        <table class="svc-table">
+          <thead>
+            <tr><th>サービス</th><th>経験あり（n=14）</th><th>経験なし（n=61）</th><th>差</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>請求書カード払い</td><td class="svc-highlight">86%</td><td>48%</td><td class="svc-diff-up">+38pt</td></tr>
+            <tr><td>請求書ファクタリング</td><td class="svc-highlight">93%</td><td>43%</td><td class="svc-diff-up">+50pt</td></tr>
+            <tr><td>注文書ファクタリング</td><td class="svc-highlight">71%</td><td>41%</td><td class="svc-diff-up">+30pt</td></tr>
+            <tr><td>売上連動型資金調達</td><td class="svc-highlight">93%</td><td>46%</td><td class="svc-diff-up">+47pt</td></tr>
+          </tbody>
+        </table>
+        <div class="svc-takeaway">💡 資金繰りに困った企業の93%がファクタリング・売上連動型に前向き。ペインが明確な層がコアターゲット。</div>
+      </div>
+
+      <!-- Card 2: 支払いタイミング別 -->
+      <div class="svc-cross-card">
+        <div class="svc-cross-header">
+          <div class="svc-cross-icon">⏱️</div>
+          <div>
+            <h4>支払いタイミング別の受容性</h4>
+            <p class="svc-cross-insight">「支払いが先に発生する」企業ほど全サービスへの関心が高い</p>
+          </div>
+        </div>
+        <table class="svc-table">
+          <thead>
+            <tr><th>サービス</th><th>支払い先行（n=38）</th><th>ほぼ同時（n=30）</th><th>入金先行（n=7）</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>請求書カード払い</td><td class="svc-highlight">66%</td><td>43%</td><td>43%</td></tr>
+            <tr><td>請求書ファクタリング</td><td class="svc-highlight">61%</td><td>40%</td><td>57%</td></tr>
+            <tr><td>注文書ファクタリング</td><td>50%</td><td>40%</td><td>57%</td></tr>
+            <tr><td>売上連動型資金調達</td><td class="svc-highlight">63%</td><td>43%</td><td>57%</td></tr>
+          </tbody>
+        </table>
+        <div class="svc-takeaway">💡 支払い先行企業（51%）は請求書カード払い・売上連動型で60%超。キャッシュギャップの訴求が刺さる層。</div>
+      </div>
+
+      <!-- Card 3: 入金期間別 -->
+      <div class="svc-cross-card">
+        <div class="svc-cross-header">
+          <div class="svc-cross-icon">📅</div>
+          <div>
+            <h4>入金最長期間別の受容性</h4>
+            <p class="svc-cross-insight">4〜6ヶ月の入金サイクルを持つ企業で、ファクタリング系の関心がピークに</p>
+          </div>
+        </div>
+        <table class="svc-table">
+          <thead>
+            <tr><th>サービス</th><th>1ヶ月以内<br><span class="th-sub">n=11</span></th><th>2〜3ヶ月<br><span class="th-sub">n=28</span></th><th>4〜6ヶ月<br><span class="th-sub">n=21</span></th><th>6ヶ月以上<br><span class="th-sub">n=15</span></th></tr>
+          </thead>
+          <tbody>
+            <tr><td>請求書カード払い</td><td>64%</td><td>57%</td><td class="svc-highlight">62%</td><td>33%</td></tr>
+            <tr><td>請求書ファクタリング</td><td>55%</td><td>46%</td><td class="svc-highlight">67%</td><td>40%</td></tr>
+            <tr><td>注文書ファクタリング</td><td>45%</td><td>39%</td><td class="svc-highlight">62%</td><td>40%</td></tr>
+            <tr><td>売上連動型資金調達</td><td>64%</td><td>50%</td><td class="svc-highlight">62%</td><td>47%</td></tr>
+          </tbody>
+        </table>
+        <div class="svc-takeaway">💡 4〜6ヶ月層がスイートスポット。6ヶ月以上は既に別の対策を講じている可能性あり。</div>
+      </div>
+
+      <!-- Card 4: Web抵抗感別 -->
+      <div class="svc-cross-card">
+        <div class="svc-cross-header">
+          <div class="svc-cross-icon">🌐</div>
+          <div>
+            <h4>Web完結型サービス抵抗感別の受容性</h4>
+            <p class="svc-cross-insight">「抵抗がある」層は全サービスで8〜25%まで急落。UIの安心感設計が必須</p>
+          </div>
+        </div>
+        <table class="svc-table">
+          <thead>
+            <tr><th>サービス</th><th>抵抗なし（n=34）</th><th>少し不安（n=29）</th><th>抵抗あり（n=12）</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>請求書カード払い</td><td class="svc-highlight">62%</td><td>59%</td><td class="svc-low">25%</td></tr>
+            <tr><td>請求書ファクタリング</td><td>59%</td><td class="svc-highlight">62%</td><td class="svc-low">8%</td></tr>
+            <tr><td>注文書ファクタリング</td><td>50%</td><td class="svc-highlight">59%</td><td class="svc-low">8%</td></tr>
+            <tr><td>売上連動型資金調達</td><td class="svc-highlight">65%</td><td>62%</td><td class="svc-low">8%</td></tr>
+          </tbody>
+        </table>
+        <div class="svc-takeaway">💡 注目：「少し不安がある」層（39%）は抵抗なし層と同等の受容性。不安を取り除く説明があれば転換可能。</div>
+      </div>
+
+      <!-- Card 5: 100万円使い道別 -->
+      <div class="svc-cross-card wide">
+        <div class="svc-cross-header">
+          <div class="svc-cross-icon">🎯</div>
+          <div>
+            <h4>100万円即日調達の使い道別の受容性</h4>
+            <p class="svc-cross-insight">「運転資金確保」を選んだ企業が、全サービスで最も高い受容性</p>
+          </div>
+        </div>
+        <table class="svc-table">
+          <thead>
+            <tr><th>サービス</th><th>運転資金確保<br><span class="th-sub">n=22</span></th><th>広告・販促<br><span class="th-sub">n=25</span></th><th>店舗・EC改善<br><span class="th-sub">n=14</span></th><th>新商品・仕入<br><span class="th-sub">n=12</span></th><th>借入返済<br><span class="th-sub">n=2</span></th></tr>
+          </thead>
+          <tbody>
+            <tr><td>請求書カード払い</td><td class="svc-highlight">73%</td><td>44%</td><td>50%</td><td>58%</td><td class="svc-low">0%</td></tr>
+            <tr><td>請求書ファクタリング</td><td class="svc-highlight">68%</td><td>48%</td><td>64%</td><td>25%</td><td class="svc-low">0%</td></tr>
+            <tr><td>注文書ファクタリング</td><td>55%</td><td>44%</td><td class="svc-highlight">64%</td><td>25%</td><td class="svc-low">0%</td></tr>
+            <tr><td>売上連動型資金調達</td><td class="svc-highlight">68%</td><td>48%</td><td>64%</td><td>42%</td><td class="svc-low">0%</td></tr>
+          </tbody>
+        </table>
+        <div class="svc-takeaway">💡 「運転資金確保」層（29%）は全サービスで55〜73%と最もホット。「店舗・EC改善」層もファクタリング系で64%と高い。マーケティングメッセージは運転資金ニーズに寄せるのが効果的。</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="content" id="content"></div>
+
+<script>
+const SURVEY_DATA = {
+  "total": 75,
+  "sections": [
+    {
+      "id": 1,
+      "title": "基本情報・事業規模",
+      "questions": [
+        {
+          "q": "事業形態を教えてください",
+          "type": "pie",
+          "data": [
+            {
+              "label": "法人",
+              "count": 74
+            },
+            {
+              "label": "個人事業主",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "q": "事業開始からの年数を教えてください",
+          "type": "bar",
+          "data": [
+            {
+              "label": "1〜3年",
+              "count": 9
+            },
+            {
+              "label": "3〜5年",
+              "count": 5
+            },
+            {
+              "label": "5年以上",
+              "count": 61
+            }
+          ]
+        },
+        {
+          "q": "直近の年間売上規模を教えてください",
+          "type": "bar",
+          "data": [
+            {
+              "label": "〜1000万円未満",
+              "count": 2
+            },
+            {
+              "label": "1000万円〜5000万円未満",
+              "count": 4
+            },
+            {
+              "label": "5000万円〜1億円未満",
+              "count": 2
+            },
+            {
+              "label": "1億円〜5億円未満",
+              "count": 22
+            },
+            {
+              "label": "5億円以上",
+              "count": 45
+            }
+          ]
+        },
+        {
+          "q": "従業員数（ご自身含む）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "1名",
+              "count": 1
+            },
+            {
+              "label": "2〜5名",
+              "count": 9
+            },
+            {
+              "label": "6〜10名",
+              "count": 5
+            },
+            {
+              "label": "11名以上",
+              "count": 60
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "取引ボリューム（請求書の実態）",
+      "questions": [
+        {
+          "q": "月間の請求書「発行件数（売上側）」",
+          "type": "bar",
+          "data": [
+            {
+              "label": "発行していない",
+              "count": 7
+            },
+            {
+              "label": "1〜5件",
+              "count": 3
+            },
+            {
+              "label": "6〜20件",
+              "count": 6
+            },
+            {
+              "label": "21〜50件",
+              "count": 15
+            },
+            {
+              "label": "51件以上",
+              "count": 44
+            }
+          ]
+        },
+        {
+          "q": "売上請求の「1取引あたり平均金額」",
+          "type": "bar",
+          "data": [
+            {
+              "label": "〜5万円未満",
+              "count": 4
+            },
+            {
+              "label": "5万円〜20万円未満",
+              "count": 6
+            },
+            {
+              "label": "20万円〜50万円未満",
+              "count": 14
+            },
+            {
+              "label": "50万円〜100万円未満",
+              "count": 16
+            },
+            {
+              "label": "100万円〜300万円未満",
+              "count": 13
+            },
+            {
+              "label": "300万円以上",
+              "count": 22
+            }
+          ]
+        },
+        {
+          "q": "月間の請求書「受取件数（仕入・経費側）」",
+          "type": "bar",
+          "data": [
+            {
+              "label": "受け取っていない",
+              "count": 13
+            },
+            {
+              "label": "1〜5件",
+              "count": 2
+            },
+            {
+              "label": "6〜20件",
+              "count": 15
+            },
+            {
+              "label": "21〜50件",
+              "count": 14
+            },
+            {
+              "label": "51件以上",
+              "count": 31
+            }
+          ]
+        },
+        {
+          "q": "仕入・経費の「1取引あたり平均支払額」",
+          "type": "bar",
+          "data": [
+            {
+              "label": "〜5万円未満",
+              "count": 6
+            },
+            {
+              "label": "5万円〜20万円未満",
+              "count": 4
+            },
+            {
+              "label": "20万円〜50万円未満",
+              "count": 17
+            },
+            {
+              "label": "50万円〜100万円未満",
+              "count": 17
+            },
+            {
+              "label": "100万円〜300万円未満",
+              "count": 10
+            },
+            {
+              "label": "300万円以上",
+              "count": 21
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "取引先構造（信用力・集中度）",
+      "questions": [
+        {
+          "q": "主な販売先はどのような企業ですか？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "中堅企業",
+              "count": 24
+            },
+            {
+              "label": "上場企業・大手企業",
+              "count": 22
+            },
+            {
+              "label": "小規模事業者",
+              "count": 21
+            },
+            {
+              "label": "個人顧客中心",
+              "count": 8
+            }
+          ]
+        },
+        {
+          "q": "売上のうち、最大取引先が占める割合",
+          "type": "pie",
+          "data": [
+            {
+              "label": "20%未満",
+              "count": 43
+            },
+            {
+              "label": "20〜50%",
+              "count": 27
+            },
+            {
+              "label": "50%以上",
+              "count": 5
+            }
+          ]
+        },
+        {
+          "q": "過去に売掛金の入金遅延を経験したことは？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "ない",
+              "count": 27
+            },
+            {
+              "label": "たまにある",
+              "count": 44
+            },
+            {
+              "label": "よくある",
+              "count": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "取引構造・業務フロー",
+      "questions": [
+        {
+          "q": "取引時に「注文書（発注書）」は発行・受領していますか？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "はい（オーダーシステム / 書面 / PDFなどで正式に発行）",
+              "count": 49
+            },
+            {
+              "label": "一部の取引のみ発行",
+              "count": 19
+            },
+            {
+              "label": "発行していない（口頭・メールのみ）",
+              "count": 7
+            }
+          ]
+        },
+        {
+          "q": "請求書の発行・管理方法",
+          "type": "pie",
+          "data": [
+            {
+              "label": "会計ソフト / 請求書発行サービスを利用",
+              "count": 49
+            },
+            {
+              "label": "Excel等で作成しPDFで送付",
+              "count": 19
+            },
+            {
+              "label": "取引先任せ",
+              "count": 4
+            },
+            {
+              "label": "紙・手書き",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "q": "仕入れや経費支払いにクレジットカードを利用していますか？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "たまに利用している",
+              "count": 34
+            },
+            {
+              "label": "利用していない（銀行振込のみ）",
+              "count": 29
+            },
+            {
+              "label": "頻繁に利用している",
+              "count": 12
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "キャッシュフローの実態",
+      "questions": [
+        {
+          "q": "受注から入金までの最長期間は？",
+          "type": "bar",
+          "data": [
+            {
+              "label": "1ヶ月以内",
+              "count": 11
+            },
+            {
+              "label": "2〜3ヶ月",
+              "count": 28
+            },
+            {
+              "label": "4〜6ヶ月",
+              "count": 21
+            },
+            {
+              "label": "6ヶ月以上",
+              "count": 15
+            }
+          ]
+        },
+        {
+          "q": "支払いと入金のタイミング",
+          "type": "pie",
+          "data": [
+            {
+              "label": "支払いが先に発生する",
+              "count": 38
+            },
+            {
+              "label": "ほぼ同時",
+              "count": 30
+            },
+            {
+              "label": "入金が先にある",
+              "count": 7
+            }
+          ]
+        },
+        {
+          "q": "売上は季節変動がありますか？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "繁忙期と閑散期がある",
+              "count": 69
+            },
+            {
+              "label": "ほぼ一定",
+              "count": 5
+            },
+            {
+              "label": "年に1回大きな山がある",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "q": "資金繰りが厳しくなるタイミング（複数選択可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "特にない",
+              "count": 40
+            },
+            {
+              "label": "製造・仕入れ時",
+              "count": 27
+            },
+            {
+              "label": "展示会準備期間",
+              "count": 9
+            },
+            {
+              "label": "閑散期",
+              "count": 11
+            },
+            {
+              "label": "納税時期",
+              "count": 7
+            }
+          ]
+        },
+        {
+          "q": "最も負担が大きい支出は？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "仕入れ・材料費・外注費",
+              "count": 44
+            },
+            {
+              "label": "人件費・固定費",
+              "count": 20
+            },
+            {
+              "label": "広告宣伝費",
+              "count": 6
+            },
+            {
+              "label": "設備投資・内装費",
+              "count": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "資金調達経験・ニーズ",
+      "questions": [
+        {
+          "q": "過去1年以内に資金繰りに困った経験はありますか？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "ない",
+              "count": 61
+            },
+            {
+              "label": "ある",
+              "count": 14
+            }
+          ]
+        },
+        {
+          "q": "そのときの資金繰り手段（複数可）※n=14",
+          "type": "bar",
+          "data": [
+            {
+              "label": "銀行融資",
+              "count": 14
+            },
+            {
+              "label": "政策金融公庫",
+              "count": 2
+            },
+            {
+              "label": "ファクタリング",
+              "count": 1
+            },
+            {
+              "label": "売上連動型資金調達",
+              "count": 1
+            },
+            {
+              "label": "商工融資",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "q": "融資申請で苦労した経験（複数可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "特にない",
+              "count": 50
+            },
+            {
+              "label": "書類準備が大変だった",
+              "count": 14
+            },
+            {
+              "label": "審査に時間がかかりすぎた",
+              "count": 7
+            },
+            {
+              "label": "借入を増やすことに抵抗があった",
+              "count": 6
+            },
+            {
+              "label": "審査に通らなかった",
+              "count": 3
+            },
+            {
+              "label": "希望額が小さく対応されなかった",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "q": "資金が必要になる場合の想定金額",
+          "type": "bar",
+          "data": [
+            {
+              "label": "〜50万円",
+              "count": 13
+            },
+            {
+              "label": "50〜200万円",
+              "count": 8
+            },
+            {
+              "label": "200〜500万円",
+              "count": 11
+            },
+            {
+              "label": "500万円以上",
+              "count": 43
+            }
+          ]
+        },
+        {
+          "q": "100万円を即日調達できるとしたら最優先の使い道は？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "広告・販促強化",
+              "count": 25
+            },
+            {
+              "label": "運転資金確保",
+              "count": 22
+            },
+            {
+              "label": "店舗・EC改善",
+              "count": 14
+            },
+            {
+              "label": "新商品開発・仕入拡大",
+              "count": 12
+            },
+            {
+              "label": "借入返済",
+              "count": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "サービス受容性",
+      "questions": [
+        {
+          "q": "請求書カード払い",
+          "type": "stacked",
+          "data": [
+            {
+              "label": "ぜひ利用したい",
+              "count": 5
+            },
+            {
+              "label": "必要があれば利用したい",
+              "count": 36
+            },
+            {
+              "label": "利用しないと思う",
+              "count": 34
+            }
+          ]
+        },
+        {
+          "q": "請求書ファクタリング",
+          "type": "stacked",
+          "data": [
+            {
+              "label": "ぜひ利用したい",
+              "count": 4
+            },
+            {
+              "label": "必要があれば利用したい",
+              "count": 35
+            },
+            {
+              "label": "利用しないと思う",
+              "count": 36
+            }
+          ]
+        },
+        {
+          "q": "注文書ファクタリング",
+          "type": "stacked",
+          "data": [
+            {
+              "label": "ぜひ利用したい",
+              "count": 2
+            },
+            {
+              "label": "必要があれば利用したい",
+              "count": 33
+            },
+            {
+              "label": "利用しないと思う",
+              "count": 40
+            }
+          ]
+        },
+        {
+          "q": "売上連動型資金調達",
+          "type": "stacked",
+          "data": [
+            {
+              "label": "ぜひ利用したい",
+              "count": 2
+            },
+            {
+              "label": "必要があれば利用したい",
+              "count": 39
+            },
+            {
+              "label": "利用しないと思う",
+              "count": 34
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "デジタル・金融インフラ状況",
+      "questions": [
+        {
+          "q": "事業用クレジットカードの利用可能枠は？",
+          "type": "bar",
+          "data": [
+            {
+              "label": "持っていない",
+              "count": 26
+            },
+            {
+              "label": "〜30万円",
+              "count": 2
+            },
+            {
+              "label": "30〜100万円",
+              "count": 14
+            },
+            {
+              "label": "100〜300万円",
+              "count": 18
+            },
+            {
+              "label": "300万円以上",
+              "count": 15
+            }
+          ]
+        },
+        {
+          "q": "インターネットバンキングを利用していますか？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "利用している",
+              "count": 52
+            },
+            {
+              "label": "利用していない",
+              "count": 23
+            }
+          ]
+        },
+        {
+          "q": "Web完結型金融サービスへの抵抗感は？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "抵抗はない",
+              "count": 34
+            },
+            {
+              "label": "少し不安がある",
+              "count": 29
+            },
+            {
+              "label": "抵抗がある",
+              "count": 12
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+const COLORS = {
+  bar: ['#3561d4','#6c5ce7','#00a19a','#e05888','#d4a017','#2eaa8a','#7c6bc4','#d47a5a'],
+  pie: ['#3561d4','#6c5ce7','#00a19a','#e05888','#d4a017','#2eaa8a','#7c6bc4','#d47a5a'],
+  stacked: ['#00a19a','#3561d4','#8b8fb0']
+};
+
+function buildNav() {
+  const nav = document.getElementById('nav');
+  const summaryLink = document.createElement('a');
+  summaryLink.href = '#section-summary';
+  summaryLink.textContent = 'Summary';
+  summaryLink.classList.add('active');
+  nav.appendChild(summaryLink);
+  const svcLink = document.createElement('a');
+  svcLink.href = '#section-services';
+  svcLink.textContent = 'Services';
+  nav.appendChild(svcLink);
+  SURVEY_DATA.sections.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#section-' + s.id;
+    a.textContent = s.id + '. ' + s.title;
+    nav.appendChild(a);
+  });
+}
+
+function createBarChart(canvas, q) {
+  const ctx = canvas.getContext('2d');
+  const labels = q.data.map(d => d.label);
+  const counts = q.data.map(d => d.count);
+  const total = counts.reduce((a,b) => a+b, 0);
+  const isHorizontal = labels.some(l => l.length > 8) || labels.length > 4;
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: counts,
+        backgroundColor: COLORS.bar.slice(0, counts.length).map(c => c + 'cc'),
+        borderColor: COLORS.bar.slice(0, counts.length),
+        borderWidth: 1,
+        borderRadius: 6,
+        barPercentage: 0.7,
+      }]
+    },
+    options: {
+      indexAxis: isHorizontal ? 'y' : 'x',
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: isHorizontal ? Math.max(1.2, 0.4 * labels.length + 0.4) : 1.6,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx2 => {
+              const v = ctx2.raw;
+              return v + '件（' + Math.round(v/total*100) + '%）';
+            }
+          }
+        },
+        datalabels: false
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          ticks: { color: '#5a6178', font: { size: 11, family: "'Noto Sans JP'" } },
+          ...(isHorizontal ? {} : { beginAtZero: true })
+        },
+        y: {
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          ticks: { color: '#5a6178', font: { size: 11, family: "'Noto Sans JP'" } },
+          ...(isHorizontal ? { beginAtZero: true } : {})
+        }
+      }
+    },
+    plugins: [{
+      afterDatasetsDraw(chart) {
+        const ctx3 = chart.ctx;
+        chart.data.datasets[0].data.forEach((val, i) => {
+          const meta = chart.getDatasetMeta(0).data[i];
+          const pct = Math.round(val/total*100);
+          ctx3.save();
+          ctx3.fillStyle = '#1a1a2e';
+          ctx3.font = "600 11px 'Noto Sans JP'";
+          if (isHorizontal) {
+            ctx3.textAlign = 'left';
+            ctx3.textBaseline = 'middle';
+            ctx3.fillText(val + '件（' + pct + '%）', meta.x + 8, meta.y);
+          } else {
+            ctx3.textAlign = 'center';
+            ctx3.textBaseline = 'bottom';
+            ctx3.fillText(val + '件', meta.x, meta.y - 6);
+          }
+          ctx3.restore();
+        });
+      }
+    }]
+  });
+}
+
+function createPieChart(canvas, q) {
+  const ctx = canvas.getContext('2d');
+  const labels = q.data.map(d => d.label);
+  const counts = q.data.map(d => d.count);
+  const total = counts.reduce((a,b) => a+b, 0);
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: counts,
+        backgroundColor: COLORS.pie.slice(0, counts.length),
+        borderColor: '#f7f8fa',
+        borderWidth: 3,
+        hoverOffset: 8,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1.1,
+      cutout: '55%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#3a3f54',
+            font: { size: 13, family: "'Noto Sans JP'", weight: 500 },
+            padding: 16,
+            usePointStyle: true,
+            pointStyle: 'rectRounded',
+            generateLabels: (chart) => {
+              const ds = chart.data.datasets[0];
+              return chart.data.labels.map((label, i) => ({
+                text: label + '：' + ds.data[i] + '件（' + Math.round(ds.data[i]/total*100) + '%）',
+                fillStyle: ds.backgroundColor[i],
+                strokeStyle: ds.backgroundColor[i],
+                hidden: false,
+                index: i,
+                pointStyle: 'rectRounded'
+              }));
+            }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx2 => {
+              const v = ctx2.raw;
+              return ctx2.label + '：' + v + '件（' + Math.round(v/total*100) + '%）';
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function createStackedComparison(container, questions) {
+  const total = SURVEY_DATA.total;
+  const cats = questions[0].data.map(d => d.label);
+
+  const grid = document.createElement('div');
+  grid.className = 'stacked-grid';
+
+  questions.forEach(q => {
+    const row = document.createElement('div');
+    row.className = 'stacked-row';
+
+    const lbl = document.createElement('div');
+    lbl.className = 'stacked-label';
+    lbl.textContent = q.q;
+    row.appendChild(lbl);
+
+    const barWrap = document.createElement('div');
+    barWrap.className = 'stacked-bar-wrap';
+
+    q.data.forEach((d, i) => {
+      const pct = (d.count / total * 100);
+      const seg = document.createElement('div');
+      seg.className = 'stacked-seg';
+      seg.style.width = pct + '%';
+      seg.style.backgroundColor = COLORS.stacked[i];
+      if (pct > 8) {
+        const sp = document.createElement('span');
+        sp.textContent = d.count + '件（' + Math.round(pct) + '%）';
+        seg.appendChild(sp);
+      }
+      barWrap.appendChild(seg);
+    });
+    row.appendChild(barWrap);
+    grid.appendChild(row);
+  });
+
+  container.appendChild(grid);
+
+  const legend = document.createElement('div');
+  legend.className = 'stacked-legend';
+  cats.forEach((c, i) => {
+    const item = document.createElement('div');
+    item.className = 'stacked-legend-item';
+    const dot = document.createElement('div');
+    dot.className = 'stacked-legend-dot';
+    dot.style.backgroundColor = COLORS.stacked[i];
+    item.appendChild(dot);
+    item.appendChild(document.createTextNode(c));
+    legend.appendChild(item);
+  });
+  container.appendChild(legend);
+}
+
+function render() {
+  buildNav();
+  const content = document.getElementById('content');
+
+  SURVEY_DATA.sections.forEach(section => {
+    const sec = document.createElement('div');
+    sec.className = 'section';
+    sec.id = 'section-' + section.id;
+
+    const header = document.createElement('div');
+    header.className = 'section-header';
+    header.innerHTML = '<div class="section-num">' + String(section.id).padStart(2,'0') + '</div><div class="section-title">' + section.title + '</div>';
+    sec.appendChild(header);
+
+    // Section 7: stacked comparison
+    if (section.id === 7) {
+      const card = document.createElement('div');
+      card.className = 'chart-card wide';
+      const qDiv = document.createElement('div');
+      qDiv.className = 'chart-question';
+      qDiv.textContent = 'サービス受容性の比較（4サービス）';
+      card.appendChild(qDiv);
+      const badge = document.createElement('div');
+      badge.className = 'chart-type-badge';
+      badge.textContent = 'stacked bar';
+      card.appendChild(badge);
+      createStackedComparison(card, section.questions);
+      const grid = document.createElement('div');
+      grid.className = 'chart-grid';
+      grid.appendChild(card);
+      sec.appendChild(grid);
+      content.appendChild(sec);
+      return;
+    }
+
+    const grid = document.createElement('div');
+    grid.className = 'chart-grid';
+
+    section.questions.forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'chart-card';
+      if (q.type === 'bar' && q.data.length > 5) card.className += ' wide';
+
+      const qDiv = document.createElement('div');
+      qDiv.className = 'chart-question';
+      qDiv.textContent = 'Q. ' + q.q;
+      card.appendChild(qDiv);
+
+      const badge = document.createElement('div');
+      badge.className = 'chart-type-badge';
+      badge.textContent = q.type === 'pie' ? 'doughnut' : 'bar chart';
+      card.appendChild(badge);
+
+      const container = document.createElement('div');
+      container.className = 'chart-container' + (q.type === 'pie' ? ' pie-container' : '');
+      const canvas = document.createElement('canvas');
+      container.appendChild(canvas);
+      card.appendChild(container);
+      grid.appendChild(card);
+
+      setTimeout(() => {
+        if (q.type === 'pie') createPieChart(canvas, q);
+        else createBarChart(canvas, q);
+      }, 50);
+    });
+
+    sec.appendChild(grid);
+    content.appendChild(sec);
+  });
+
+  // Scroll spy
+  const navLinks = document.querySelectorAll('.nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const target = document.querySelector('.nav a[href="#' + e.target.id + '"]');
+        if (target) target.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  document.querySelectorAll('.section').forEach(s => observer.observe(s));
+  const summaryEl = document.getElementById('section-summary');
+  if (summaryEl) observer.observe(summaryEl);
+  const svcEl = document.getElementById('section-services');
+  if (svcEl) observer.observe(svcEl);
+}
+
+render();
+</script>
+</body>
+</html>
