@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生成AI活用に関するアンケート 結果レポート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFFFFF;
+  --surface: #FAFAFA;
+  --surface2: #EEEEEE;
+  --border: #EEEEEE;
+  --text: #424242;
+  --text-muted: #757575;
+  --accent: #424242;
+  --accent2: #616161;
+  --accent3: #757575;
+  --accent4: #9E9E9E;
+  --accent5: #BDBDBD;
+  --section-num: #424242;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hero */
+.hero {
+  padding: 60px 40px 40px;
+  background: linear-gradient(135deg, #FAFAFA 0%, #EEEEEE 50%, #FAFAFA 100%);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(66,66,66,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #757575;
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.hero-meta {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+.hero-meta span {
+  display: inline-block;
+  background: var(--surface2);
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-right: 8px;
+  margin-top: 8px;
+  border: 1px solid var(--border);
+}
+
+/* Nav */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.nav a {
+  display: inline-block;
+  padding: 14px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.nav a:hover, .nav a.active {
+  color: #424242;
+  border-bottom-color: #424242;
+}
+
+html { scroll-behavior: smooth; }
+
+/* Content */
+.content { max-width: 1200px; margin: 0 auto; padding: 40px 40px 80px; }
+
+.section {
+  margin-bottom: 56px;
+  animation: fadeUp 0.5s ease both;
+  scroll-margin-top: 56px;
+}
+.exec-summary, .svc-section {
+  scroll-margin-top: 56px;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(20px); }
+  to { opacity:1; transform: translateY(0); }
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--section-num);
+  opacity: 0.7;
+  min-width: 48px;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Chart Grid */
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  gap: 24px;
+}
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.chart-card:hover {
+  border-color: rgba(66,66,66,0.3);
+  box-shadow: 0 4px 24px rgba(66,66,66,0.08);
+}
+.chart-card.wide {
+  grid-column: 1 / -1;
+}
+.chart-question {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.chart-type-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #424242;
+  background: rgba(66,66,66,0.08);
+  padding: 2px 10px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+.chart-container.pie-container {
+  max-width: 360px;
+  margin: 0 auto;
+}
+.chart-container canvas {
+  width: 100% !important;
+}
+
+/* Stacked comparison */
+.stacked-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+.stacked-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+.stacked-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: right;
+}
+.stacked-bar-wrap {
+  display: flex;
+  height: 32px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--surface2);
+}
+.stacked-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  transition: width 0.6s ease;
+  min-width: 0;
+}
+.stacked-seg span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; }
+.stacked-legend {
+  display: flex;
+  gap: 20px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.stacked-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.stacked-legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 3px;
+}
+
+/* Executive Summary */
+.exec-summary {
+  background: linear-gradient(135deg, #FAFAFA 0%, #EEEEEE 100%);
+  border-bottom: 1px solid var(--border);
+}
+.exec-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 40px 56px;
+}
+.exec-header {
+  margin-bottom: 36px;
+}
+.exec-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #757575;
+  margin-bottom: 8px;
+}
+.exec-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.exec-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 640px;
+}
+
+/* KPI Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.kpi-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.kpi-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 36px;
+  font-weight: 700;
+  color: #424242;
+  line-height: 1.1;
+}
+.kpi-unit {
+  font-size: 18px;
+  font-weight: 500;
+  margin-left: 2px;
+}
+.kpi-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* Insight Cards */
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.insight-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  transition: box-shadow 0.3s;
+}
+.insight-card:hover {
+  box-shadow: 0 4px 16px rgba(66,66,66,0.08);
+}
+.insight-card.wide {
+  grid-column: 1 / -1;
+}
+.insight-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface2);
+  border-radius: 10px;
+}
+.insight-content h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.insight-content p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+.insight-content strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Free text section */
+.free-text-section {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+}
+.free-text-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 40px 56px;
+}
+.free-text-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.free-text-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.7;
+  transition: box-shadow 0.3s;
+}
+.free-text-item:hover {
+  box-shadow: 0 2px 12px rgba(66,66,66,0.06);
+}
+.free-text-company {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .hero { padding: 32px 20px 28px; }
+  .hero h1 { font-size: 20px; }
+  .nav { padding: 0 16px; }
+  .content { padding: 24px 16px 60px; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .stacked-row { grid-template-columns: 120px 1fr; }
+  .exec-inner { padding: 24px 16px 32px; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .insight-grid { grid-template-columns: 1fr; }
+  .free-text-inner { padding: 24px 16px 32px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">Survey Report</div>
+  <h1>生成AI活用に関するアンケート 結果レポート</h1>
+  <div class="hero-meta">
+    <span>回答数 152件</span>
+    <span>全8セクション・24設問</span>
+    <span>2025年7月実施</span>
+  </div>
+</div>
+
+<nav class="nav" id="nav"></nav>
+
+<!-- Executive Summary -->
+<div class="exec-summary" id="section-summary">
+  <div class="exec-inner">
+    <div class="exec-header">
+      <div class="exec-label">Executive Summary</div>
+      <h2 class="exec-title">エグゼクティブサマリ</h2>
+      <p class="exec-subtitle">ファッション業界 BtoB事業者152名の生成AI活用実態と、TERMINALに求めるAI機能ニーズ</p>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-value">152<span class="kpi-unit">名</span></div>
+        <div class="kpi-label">有効回答数</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">78<span class="kpi-unit">%</span></div>
+        <div class="kpi-label">日常でAIを利用</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">70<span class="kpi-unit">%</span></div>
+        <div class="kpi-label">業務でAIを利用</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">68<span class="kpi-unit">%</span></div>
+        <div class="kpi-label">誤字脱字検知を希望</div>
+      </div>
+    </div>
+
+    <!-- Insight Blocks -->
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="insight-icon">👤</div>
+        <div class="insight-content">
+          <h3>回答者プロファイル</h3>
+          <p>回答者の<strong>50%が一般社員</strong>、<strong>営業職が最多（48%）</strong>。EC・生産管理・MD・PRなど幅広い部門が回答。管理職以上（課長〜経営層）が30%を占め、現場から経営層まで広くカバーした調査結果。</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">🤖</div>
+        <div class="insight-content">
+          <h3>AI利用の浸透度</h3>
+          <p>日常生活では<strong>78%が生成AIを利用</strong>（頻繁31%＋時々47%）。業務でも<strong>70%が活用中</strong>。一方で<strong>業務での「全く利用していない」は12%</strong>にとどまり、ファッション業界でもAI活用は確実に進行中。</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">💬</div>
+        <div class="insight-content">
+          <h3>ChatGPT一強 — サービス選定に課題</h3>
+          <p>日常・業務ともに<strong>ChatGPTが圧倒的シェア（78%/66%）</strong>。Gemini・Copilotは2〜3番手だが利用率は大きく離れる。課題として<strong>「適切なサービスの選定が難しい」が38%</strong>で上位。選択肢の多さが逆に障壁に。</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">⚠️</div>
+        <div class="insight-content">
+          <h3>導入阻害要因 — 信頼性とセキュリティ</h3>
+          <p><strong>「情報の信頼性・正確性への懸念」が43%で最多</strong>。次いで「適切なサービスの選定が難しい」38%、「セキュリティ面での懸念」37%。業務利用環境では<strong>43%が個人契約サービスを業務利用</strong>しており、シャドーIT化が進行。</p>
+        </div>
+      </div>
+      <div class="insight-card wide">
+        <div class="insight-icon">🎯</div>
+        <div class="insight-content">
+          <h3>示唆：TERMINALに求められるAI機能</h3>
+          <p>最も要望が高いのは<strong>「誤字脱字の検知」68%</strong>、次いで「売上データの集計」53%、「商品説明文の生成」52%。現場業務で最も多い利用シーンが「誤字脱字チェック・表現改善」41%であることと一致し、<strong>日常的なテキスト品質管理のニーズが突出</strong>。データ集計・レポート生成・画像タグ付けなど、<strong>「入力→整理→出力」の業務効率化</strong>がTERMINALへの期待の核。個人契約AIの業務利用が43%と高く、プラットフォーム内蔵AI機能は<strong>セキュリティ・ガバナンス面でも訴求力が高い</strong>。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="content" class="content"></div>
+
+<script>
+const COLORS = {
+  bar: ['#424242','#616161','#757575','#9E9E9E','#BDBDBD','#424242','#616161','#757575','#9E9E9E','#BDBDBD','#424242','#616161','#757575','#9E9E9E','#BDBDBD','#424242','#616161','#757575','#9E9E9E','#BDBDBD','#424242','#616161','#757575','#9E9E9E'],
+  pie: ['#424242','#616161','#757575','#9E9E9E','#BDBDBD','#D5D5D5','#E0E0E0','#EEEEEE'],
+  stacked: ['#424242','#616161','#757575','#9E9E9E','#BDBDBD']
+};
+
+const SURVEY_DATA = {
+  "total": 152,
+  "sections": [
+    {
+      "id": 1,
+      "title": "回答者属性",
+      "questions": [
+        {
+          "q": "あなたの役職を教えてください",
+          "type": "bar",
+          "data": [
+            {"label": "一般社員クラス", "count": 76},
+            {"label": "係長・主任クラス", "count": 31},
+            {"label": "課長クラス", "count": 19},
+            {"label": "部長クラス", "count": 17},
+            {"label": "経営層・役員クラス", "count": 9}
+          ]
+        },
+        {
+          "q": "あなたの担当業務を教えてください（複数回答）",
+          "type": "bar",
+          "data": [
+            {"label": "営業", "count": 73},
+            {"label": "EC", "count": 23},
+            {"label": "生産管理", "count": 20},
+            {"label": "MD", "count": 18},
+            {"label": "PR", "count": 17},
+            {"label": "マーケティング", "count": 16},
+            {"label": "物流", "count": 15},
+            {"label": "商品企画・開発", "count": 14},
+            {"label": "情報システム", "count": 12},
+            {"label": "会計・経理", "count": 10},
+            {"label": "経営", "count": 9},
+            {"label": "仕入", "count": 8},
+            {"label": "販売", "count": 6},
+            {"label": "人事・労務", "count": 5}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "日常生活における生成AI利用状況",
+      "questions": [
+        {
+          "q": "日常生活で生成AIを活用していますか？",
+          "type": "pie",
+          "data": [
+            {"label": "頻繁に利用している", "count": 47},
+            {"label": "時々利用している", "count": 71},
+            {"label": "ほとんど利用していない", "count": 22},
+            {"label": "全く利用していない", "count": 12}
+          ]
+        },
+        {
+          "q": "日常生活で使用している生成AIサービス（複数回答）",
+          "type": "bar",
+          "data": [
+            {"label": "ChatGPT", "count": 118},
+            {"label": "Gemini", "count": 34},
+            {"label": "Microsoft Copilot", "count": 14},
+            {"label": "その他", "count": 13},
+            {"label": "Canva", "count": 11},
+            {"label": "Perplexity", "count": 6},
+            {"label": "利用していない", "count": 15}
+          ]
+        },
+        {
+          "q": "日常生活における具体的な利用シーン（複数回答）",
+          "type": "bar",
+          "data": [
+            {"label": "情報収集・学習", "count": 104},
+            {"label": "文章・テキスト生成", "count": 87},
+            {"label": "趣味・エンターテインメント", "count": 34},
+            {"label": "会話相手・壁打ち相手", "count": 34},
+            {"label": "画像・動画生成", "count": 27},
+            {"label": "企画・計画立案", "count": 27},
+            {"label": "利用していない", "count": 19},
+            {"label": "その他", "count": 8}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "業務における生成AI利用状況",
+      "questions": [
+        {
+          "q": "業務における生成AIの活用状況について",
+          "type": "pie",
+          "data": [
+            {"label": "頻繁に利用している", "count": 45},
+            {"label": "時々利用している", "count": 62},
+            {"label": "ほとんど利用していない", "count": 27},
+            {"label": "全く利用していない", "count": 18}
+          ]
+        },
+        {
+          "q": "業務で使用している生成AIサービス（複数回答）",
+          "type": "bar",
+          "data": [
+            {"label": "ChatGPT", "count": 101},
+            {"label": "Gemini", "count": 30},
+            {"label": "Microsoft Copilot", "count": 24},
+            {"label": "利用していない", "count": 23},
+            {"label": "その他", "count": 9},
+            {"label": "Perplexity", "count": 5},
+            {"label": "Canva", "count": 5}
+          ]
+        },
+        {
+          "q": "業務における生成AIの利用開始時期",
+          "type": "bar",
+          "data": [
+            {"label": "3ヶ月未満", "count": 27},
+            {"label": "3〜6ヶ月未満", "count": 41},
+            {"label": "6ヶ月〜1年未満", "count": 36},
+            {"label": "1年〜2年未満", "count": 22},
+            {"label": "2年以上", "count": 4},
+            {"label": "利用していない", "count": 22}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "業務AI利用環境・利用シーン",
+      "questions": [
+        {
+          "q": "業務で利用する生成AIの提供環境（複数回答）",
+          "type": "bar",
+          "data": [
+            {"label": "個人契約を業務利用", "count": 65},
+            {"label": "会社契約・導入済み", "count": 57},
+            {"label": "利用していない", "count": 30},
+            {"label": "会社許可+個人契約", "count": 16},
+            {"label": "会社が禁止", "count": 2}
+          ]
+        },
+        {
+          "q": "業務における具体的な利用シーン（複数回答）",
+          "type": "bar",
+          "data": [
+            {"label": "誤字脱字チェック・表現改善", "count": 63},
+            {"label": "定型メール・返信文案作成", "count": 59},
+            {"label": "資料・スライド作成", "count": 48},
+            {"label": "Excel関数の作成", "count": 35},
+            {"label": "議事録作成", "count": 35},
+            {"label": "基礎知識のキャッチアップ", "count": 30},
+            {"label": "キャッチコピー作成", "count": 30},
+            {"label": "図解・イラスト生成", "count": 25},
+            {"label": "利用していない", "count": 23},
+            {"label": "競合他社の情報分析", "count": 21},
+            {"label": "契約書ドラフトレビュー", "count": 14},
+            {"label": "トレンドキーワード抽出", "count": 11},
+            {"label": "アンケート作成・分析", "count": 10}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "生成AI利用の課題",
+      "questions": [
+        {
+          "q": "生成AIの利用に関する課題について（複数回答）",
+          "type": "bar",
+          "data": [
+            {"label": "情報の信頼性・正確性に懸念", "count": 65},
+            {"label": "適切なサービスの選定が難しい", "count": 58},
+            {"label": "セキュリティ面での懸念", "count": 56},
+            {"label": "法規制やガイドラインが不明確", "count": 33},
+            {"label": "学習リソース不足", "count": 26},
+            {"label": "著作権・倫理的な問題", "count": 23},
+            {"label": "活用方法・用途がわからない", "count": 22},
+            {"label": "導入コストが高い", "count": 21},
+            {"label": "導入効果が不明瞭", "count": 19},
+            {"label": "課題はない", "count": 16},
+            {"label": "社内理解・協力が得られない", "count": 11}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "社内における役割・情報収集",
+      "questions": [
+        {
+          "q": "生成AI活用における社内の役割（複数回答）",
+          "type": "bar",
+          "data": [
+            {"label": "情報収集者", "count": 71},
+            {"label": "実務者", "count": 57},
+            {"label": "専門家/サポート", "count": 28},
+            {"label": "推進者", "count": 26},
+            {"label": "利用者ではない", "count": 23},
+            {"label": "傍観者", "count": 10}
+          ]
+        },
+        {
+          "q": "生成AI活用に関する情報収集の方法（複数回答）",
+          "type": "bar",
+          "data": [
+            {"label": "SNS（X・Facebook等）", "count": 76},
+            {"label": "オンライン記事・ブログ", "count": 63},
+            {"label": "会社の同僚・知人", "count": 48},
+            {"label": "動画コンテンツ", "count": 36},
+            {"label": "していない", "count": 28},
+            {"label": "社内の情報共有・勉強会", "count": 27},
+            {"label": "企業からの情報", "count": 11},
+            {"label": "ポッドキャスト", "count": 6},
+            {"label": "専門書籍・技術書", "count": 6}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "日常 vs 業務：AI利用度の比較",
+      "questions": [
+        {
+          "q": "日常生活",
+          "data": [
+            {"label": "頻繁に利用", "count": 47},
+            {"label": "時々利用", "count": 71},
+            {"label": "ほとんど利用しない", "count": 22},
+            {"label": "全く利用しない", "count": 12}
+          ]
+        },
+        {
+          "q": "業務",
+          "data": [
+            {"label": "頻繁に利用", "count": 45},
+            {"label": "時々利用", "count": 62},
+            {"label": "ほとんど利用しない", "count": 27},
+            {"label": "全く利用しない", "count": 18}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "TERMINALに求めるAI機能",
+      "questions": [
+        {
+          "q": "TERMINALにあったらいいと思うAI機能（複数回答）",
+          "type": "bar",
+          "data": [
+            {"label": "誤字脱字の検知", "count": 104},
+            {"label": "売上データの集計", "count": 81},
+            {"label": "商品説明文の生成", "count": 79},
+            {"label": "カスタムレポートの生成", "count": 62},
+            {"label": "売れ行き商品の確認", "count": 61},
+            {"label": "画像認識によるタグ付け", "count": 59},
+            {"label": "問い合わせへの回答", "count": 27},
+            {"label": "バイヤーからの質問回答", "count": 24}
+          ]
+        },
+        {
+          "q": "今後TERMINAL担当者からの連絡可否",
+          "type": "pie",
+          "data": [
+            {"label": "はい", "count": 66},
+            {"label": "いいえ", "count": 86}
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+// Free text responses
+const FREE_TEXT = [
+  "サンプル納期とバルク納期2つを商品ページに設定できる機能。バイヤー様は、サンプルかバルクか選んで数量を入力可能",
+  "レイアウトなどのカスタマイズ",
+  "登録した商品画像から、人が着用した画像の生成。AIとチャットしながら、発注内容を自動で入力する機能（予算や、着数、アイテムバランスなどを会話して発注内容をAIに入力してもらう）",
+  "カラーチップの登録（画像でカラーを自動認識してチップを登録）、背景が真っ黒になる写真の背景修正",
+  "AIモデルなどを活用して、着用画像・着用動画の作成。他社ブランドや業界全体でのトレンド・情報の発信（好調ブランド・好調アイテムなど）",
+  "翻訳機能",
+  "オーダー集計機能（品番別・ベストセラーなど）があれば良いなと思います",
+  "カラーチップの自動生成",
+  "SKU単位での掛け率設定",
+  "顧客別の売上分析で売れそうな商品の傾向を提案",
+  "API連携機能。例えば、在庫更新は週3回手動で行ってますが、APIで自動連携できれば毎日更新できるなど",
+  "卸先が展示会での受注ランキングの上位品番を受注していなかった場合に通知する機能",
+  "売り上げ分析",
+  "API連携",
+  "発売前の商品が多く自分たちで物撮することが多いので、写真のクオリティがまちまちになります。画像の色味修正や切り抜きなどが簡単にできたら嬉しいです",
+  "画像一括リサイズ",
+  "エクセルパワークエリ活用",
+  "ユーザーからの問い合わせ回答など",
+  "展示会訪問の予約お知らせ機能等",
+  "請求書作成の機能も入れて欲しい。（汎用性のあるエクセル、またはCSV）。商品のバーコード自動作成による物流システムの構築",
+  "お客様の閲覧している商品の特徴や価格帯などをまとめたレポートの作成。人気ランキングなどのクリエイティブの作成。利用促進を伸ばすためのアプローチ方法の提案",
+  "売上データの集計と売れ行き商品の確認を掛け合わせて、お取引先ごとの商品の好みの傾向がわかるといいなと思います。素材、サイズ、季節ごとの仕入れ傾向など",
+  "同一品番の納品漏れのアラート",
+  "商品登録後、個別での削除",
+  "発注時にバイヤー側からの希望納期設定、分納設定ができると大変助かります",
+  "受注状況を分析して、傾向や受注アップの為の分析",
+  "ラインシートのカスタムできる機能、ルック画像の自動生成"
+];
+
+function buildNav() {
+  const nav = document.getElementById('nav');
+  function makeLink(href, text, active) {
+    const a = document.createElement('a');
+    a.href = href;
+    a.textContent = text;
+    if (active) a.className = 'active';
+    return a;
+  }
+  nav.appendChild(makeLink('#section-summary', 'Summary', true));
+  SURVEY_DATA.sections.forEach(s => {
+    nav.appendChild(makeLink('#section-' + s.id, s.id + '. ' + s.title, false));
+  });
+  nav.appendChild(makeLink('#section-freetext', 'Voice', false));
+}
+
+function createBarChart(canvas, q) {
+  const ctx = canvas.getContext('2d');
+  const labels = q.data.map(d => d.label);
+  const counts = q.data.map(d => d.count);
+  const total = counts.reduce((a,b) => a+b, 0);
+  const isHorizontal = labels.some(l => l.length > 8) || labels.length > 4;
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: counts,
+        backgroundColor: COLORS.bar.slice(0, counts.length).map(c => c + 'cc'),
+        borderColor: COLORS.bar.slice(0, counts.length),
+        borderWidth: 1,
+        borderRadius: 6,
+        barPercentage: 0.7,
+      }]
+    },
+    options: {
+      indexAxis: isHorizontal ? 'y' : 'x',
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: isHorizontal ? Math.max(0.6, labels.length <= 8 ? (0.4 * labels.length + 0.4) : (0.25 * labels.length + 0.2)) : 1.6,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx2 => {
+              const v = ctx2.raw;
+              return v + '件（' + Math.round(v/total*100) + '%）';
+            }
+          }
+        },
+        datalabels: false
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          ticks: { color: '#757575', font: { size: 11, family: "'Noto Sans JP'" } },
+          ...(isHorizontal ? {} : { beginAtZero: true })
+        },
+        y: {
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          ticks: { color: '#757575', font: { size: 11, family: "'Noto Sans JP'" } },
+          ...(isHorizontal ? { beginAtZero: true } : {})
+        }
+      }
+    },
+    plugins: [{
+      afterDatasetsDraw(chart) {
+        const ctx3 = chart.ctx;
+        chart.data.datasets[0].data.forEach((val, i) => {
+          const meta = chart.getDatasetMeta(0).data[i];
+          const pct = Math.round(val/152*100);
+          ctx3.save();
+          ctx3.fillStyle = '#424242';
+          ctx3.font = "600 11px 'Noto Sans JP'";
+          if (isHorizontal) {
+            ctx3.textAlign = 'left';
+            ctx3.textBaseline = 'middle';
+            ctx3.fillText(val + '件（' + pct + '%）', meta.x + 8, meta.y);
+          } else {
+            ctx3.textAlign = 'center';
+            ctx3.textBaseline = 'bottom';
+            ctx3.fillText(val + '件', meta.x, meta.y - 6);
+          }
+          ctx3.restore();
+        });
+      }
+    }]
+  });
+}
+
+function createPieChart(canvas, q) {
+  const ctx = canvas.getContext('2d');
+  const labels = q.data.map(d => d.label);
+  const counts = q.data.map(d => d.count);
+  const total = counts.reduce((a,b) => a+b, 0);
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: counts,
+        backgroundColor: COLORS.pie.slice(0, counts.length),
+        borderColor: '#FAFAFA',
+        borderWidth: 3,
+        hoverOffset: 8,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1.1,
+      cutout: '55%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#424242',
+            font: { size: 13, family: "'Noto Sans JP'", weight: 500 },
+            padding: 16,
+            usePointStyle: true,
+            pointStyle: 'rectRounded',
+            generateLabels: (chart) => {
+              const ds = chart.data.datasets[0];
+              return chart.data.labels.map((label, i) => ({
+                text: label + '：' + ds.data[i] + '件（' + Math.round(ds.data[i]/total*100) + '%）',
+                fillStyle: ds.backgroundColor[i],
+                strokeStyle: ds.backgroundColor[i],
+                hidden: false,
+                index: i,
+                pointStyle: 'rectRounded'
+              }));
+            }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx2 => {
+              const v = ctx2.raw;
+              return ctx2.label + '：' + v + '件（' + Math.round(v/total*100) + '%）';
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function createStackedComparison(container, questions) {
+  const total = SURVEY_DATA.total;
+  const cats = questions[0].data.map(d => d.label);
+
+  const grid = document.createElement('div');
+  grid.className = 'stacked-grid';
+
+  questions.forEach(q => {
+    const row = document.createElement('div');
+    row.className = 'stacked-row';
+
+    const lbl = document.createElement('div');
+    lbl.className = 'stacked-label';
+    lbl.textContent = q.q;
+    row.appendChild(lbl);
+
+    const barWrap = document.createElement('div');
+    barWrap.className = 'stacked-bar-wrap';
+
+    q.data.forEach((d, i) => {
+      const pct = (d.count / total * 100);
+      const seg = document.createElement('div');
+      seg.className = 'stacked-seg';
+      seg.style.width = pct + '%';
+      seg.style.backgroundColor = COLORS.stacked[i];
+      if (pct > 8) {
+        const sp = document.createElement('span');
+        sp.textContent = d.count + '件（' + Math.round(pct) + '%）';
+        seg.appendChild(sp);
+      }
+      barWrap.appendChild(seg);
+    });
+    row.appendChild(barWrap);
+    grid.appendChild(row);
+  });
+
+  container.appendChild(grid);
+
+  const legend = document.createElement('div');
+  legend.className = 'stacked-legend';
+  cats.forEach((c, i) => {
+    const item = document.createElement('div');
+    item.className = 'stacked-legend-item';
+    const dot = document.createElement('div');
+    dot.className = 'stacked-legend-dot';
+    dot.style.backgroundColor = COLORS.stacked[i];
+    item.appendChild(dot);
+    item.appendChild(document.createTextNode(c));
+    legend.appendChild(item);
+  });
+  container.appendChild(legend);
+}
+
+function renderFreeText() {
+  const section = document.createElement('div');
+  section.className = 'free-text-section';
+  section.id = 'section-freetext';
+
+  const inner = document.createElement('div');
+  inner.className = 'free-text-inner';
+
+  const header = document.createElement('div');
+  header.className = 'exec-header';
+  header.innerHTML = '<div class="exec-label">User Voice</div>' +
+    '<h2 class="exec-title">自由記述：その他に欲しい機能・サポート</h2>' +
+    '<p class="exec-subtitle">回答者から寄せられた具体的な機能要望（' + FREE_TEXT.length + '件）</p>';
+  inner.appendChild(header);
+
+  const list = document.createElement('div');
+  list.className = 'free-text-list';
+
+  FREE_TEXT.forEach(text => {
+    const item = document.createElement('div');
+    item.className = 'free-text-item';
+    item.textContent = text;
+    list.appendChild(item);
+  });
+
+  inner.appendChild(list);
+  section.appendChild(inner);
+
+  // Insert after content
+  document.getElementById('content').after(section);
+}
+
+function render() {
+  buildNav();
+  const content = document.getElementById('content');
+
+  SURVEY_DATA.sections.forEach(section => {
+    const sec = document.createElement('div');
+    sec.className = 'section';
+    sec.id = 'section-' + section.id;
+
+    const header = document.createElement('div');
+    header.className = 'section-header';
+    header.innerHTML = '<div class="section-num">' + String(section.id).padStart(2,'0') + '</div><div class="section-title">' + section.title + '</div>';
+    sec.appendChild(header);
+
+    // Section 7: stacked comparison
+    if (section.id === 7) {
+      const card = document.createElement('div');
+      card.className = 'chart-card wide';
+      const qDiv = document.createElement('div');
+      qDiv.className = 'chart-question';
+      qDiv.textContent = 'AI利用度の比較（日常 vs 業務）';
+      card.appendChild(qDiv);
+      const badge = document.createElement('div');
+      badge.className = 'chart-type-badge';
+      badge.textContent = 'stacked bar';
+      card.appendChild(badge);
+      createStackedComparison(card, section.questions);
+      const grid = document.createElement('div');
+      grid.className = 'chart-grid';
+      grid.appendChild(card);
+      sec.appendChild(grid);
+      content.appendChild(sec);
+      return;
+    }
+
+    const grid = document.createElement('div');
+    grid.className = 'chart-grid';
+
+    section.questions.forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'chart-card';
+      if (q.type === 'bar' && q.data.length > 5) card.className += ' wide';
+
+      const qDiv = document.createElement('div');
+      qDiv.className = 'chart-question';
+      qDiv.textContent = 'Q. ' + q.q;
+      card.appendChild(qDiv);
+
+      const badge = document.createElement('div');
+      badge.className = 'chart-type-badge';
+      badge.textContent = q.type === 'pie' ? 'doughnut' : 'bar chart';
+      card.appendChild(badge);
+
+      const container = document.createElement('div');
+      container.className = 'chart-container' + (q.type === 'pie' ? ' pie-container' : '');
+      const canvas = document.createElement('canvas');
+      container.appendChild(canvas);
+      card.appendChild(container);
+      grid.appendChild(card);
+
+      setTimeout(() => {
+        if (q.type === 'pie') createPieChart(canvas, q);
+        else createBarChart(canvas, q);
+      }, 50);
+    });
+
+    sec.appendChild(grid);
+    content.appendChild(sec);
+  });
+
+  renderFreeText();
+
+  // Scroll spy
+  const navLinks = document.querySelectorAll('.nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const target = document.querySelector('.nav a[href="#' + e.target.id + '"]');
+        if (target) target.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  document.querySelectorAll('.section').forEach(s => observer.observe(s));
+  const summaryEl = document.getElementById('section-summary');
+  if (summaryEl) observer.observe(summaryEl);
+  const ftEl = document.getElementById('section-freetext');
+  if (ftEl) observer.observe(ftEl);
+}
+</script>
+<script>
+  (function() {
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+    s.onload = function() { render(); };
+    document.head.appendChild(s);
+  })();
+</script>
+
+</body>
+</html>
