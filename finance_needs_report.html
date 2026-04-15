@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0156)file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome.html -->
+<!-- saved from url=(0168)file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome_2.html#section-1 -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>資金繰り・経理業務アンケート レポート</title>
-<script src="./資金繰り・経理業務アンケート レポート_files/chart.umd.min.js"></script>
-<link href="./資金繰り・経理業務アンケート レポート_files/css2" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./finance_needs_report_files/css2" rel="stylesheet">
 <style>
 :root {
   --bg: #FFFFFF;
@@ -102,12 +103,19 @@ body {
   border-bottom-color: #424242;
 }
 
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
+
 /* Content */
 .content { max-width: 1200px; margin: 0 auto; padding: 40px 40px 80px; }
 
 .section {
   margin-bottom: 56px;
   animation: fadeUp 0.5s ease both;
+  scroll-margin-top: 56px;
+}
+.exec-summary, .svc-section {
+  scroll-margin-top: 56px;
 }
 @keyframes fadeUp {
   from { opacity:0; transform: translateY(20px); }
@@ -556,7 +564,7 @@ body {
   line-height: 1.7;
 }
 </style>
-</head>
+<script src="./finance_needs_report_files/chart.umd.min.js"></script></head>
 <body>
 
 <div class="hero">
@@ -569,7 +577,7 @@ body {
   </div>
 </div>
 
-<nav class="nav" id="nav"><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome.html#section-summary" class="active">Summary</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome.html#section-services" class="">Services</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome.html#section-1" class="">1. 基本情報・事業規模</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome.html#section-2" class="">2. 取引ボリューム（請求書の実態）</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome.html#section-3" class="">3. 取引先構造（信用力・集中度）</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome.html#section-4" class="">4. 取引構造・業務フロー</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome.html#section-5" class="">5. キャッシュフローの実態</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome.html#section-6" class="">6. 資金調達経験・ニーズ</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome.html#section-7" class="">7. サービス受容性</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome.html#section-8" class="">8. デジタル・金融インフラ状況</a></nav>
+<nav class="nav" id="nav"><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome_2.html#section-summary" class="active">Summary</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome_2.html#section-services" class="">Services</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome_2.html#section-1" class="">1. 基本情報・事業規模</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome_2.html#section-2" class="">2. 取引ボリューム（請求書の実態）</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome_2.html#section-3">3. 取引先構造（信用力・集中度）</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome_2.html#section-4">4. 取引構造・業務フロー</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome_2.html#section-5">5. キャッシュフローの実態</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome_2.html#section-6">6. 資金調達経験・ニーズ</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome_2.html#section-7">7. サービス受容性</a><a href="file:///Users/ryosuke/Downloads/%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E7%B5%90%E6%9E%9C%E3%83%AC%E3%83%9B%E3%82%9A%E3%83%BC%E3%83%88_monochrome_2.html#section-8">8. デジタル・金融インフラ状況</a></nav>
 
 <!-- Executive Summary -->
 <div class="exec-summary" id="section-summary">
@@ -1540,22 +1548,34 @@ const COLORS = {
   stacked: ['#424242','#757575','#BDBDBD']
 };
 
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const navH = document.getElementById('nav').offsetHeight;
+  const top = el.getBoundingClientRect().top + window.pageYOffset - navH;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
 function buildNav() {
   const nav = document.getElementById('nav');
-  const summaryLink = document.createElement('a');
-  summaryLink.href = '#section-summary';
-  summaryLink.textContent = 'Summary';
-  summaryLink.classList.add('active');
-  nav.appendChild(summaryLink);
-  const svcLink = document.createElement('a');
-  svcLink.href = '#section-services';
-  svcLink.textContent = 'Services';
-  nav.appendChild(svcLink);
-  SURVEY_DATA.sections.forEach(s => {
+
+  function makeLink(href, text, active) {
     const a = document.createElement('a');
-    a.href = '#section-' + s.id;
-    a.textContent = s.id + '. ' + s.title;
-    nav.appendChild(a);
+    a.href = href;
+    a.textContent = text;
+    if (active) a.classList.add('active');
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      scrollToSection(href.slice(1));
+      try { history.pushState(null, '', href); } catch(e) {}
+    });
+    return a;
+  }
+
+  nav.appendChild(makeLink('#section-summary', 'Summary', true));
+  nav.appendChild(makeLink('#section-services', 'Services', false));
+  SURVEY_DATA.sections.forEach(s => {
+    nav.appendChild(makeLink('#section-' + s.id, s.id + '. ' + s.title, false));
   });
 }
 
@@ -1833,7 +1853,15 @@ function render() {
   if (svcEl) observer.observe(svcEl);
 }
 
-render();
+// render() はChart.js読み込み後に実行
+</script>
+<script>
+  (function() {
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+    s.onload = function() { render(); };
+    document.head.appendChild(s);
+  })();
 </script>
 
 
