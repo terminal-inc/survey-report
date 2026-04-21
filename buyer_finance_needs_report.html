@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>請求・経理業務アンケート 結果レポート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFFFFF;
+  --surface: #FAFAFA;
+  --surface2: #EEEEEE;
+  --border: #EEEEEE;
+  --text: #424242;
+  --text-muted: #757575;
+  --accent: #424242;
+  --accent2: #616161;
+  --accent3: #757575;
+  --accent4: #9E9E9E;
+  --accent5: #BDBDBD;
+  --accent6: #616161;
+  --section-num: #424242;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hero */
+.hero {
+  padding: 60px 40px 40px;
+  background: linear-gradient(135deg, #FAFAFA 0%, #EEEEEE 50%, #FAFAFA 100%);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(66,66,66,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #757575;
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.hero-meta {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+.hero-meta span {
+  display: inline-block;
+  background: var(--surface2);
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-right: 8px;
+  margin-top: 8px;
+  border: 1px solid var(--border);
+}
+
+/* Nav */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.nav a {
+  display: inline-block;
+  padding: 14px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.nav a:hover, .nav a.active {
+  color: #424242;
+  border-bottom-color: #424242;
+}
+
+html { scroll-behavior: smooth; }
+
+/* Content */
+.content { max-width: 1200px; margin: 0 auto; padding: 40px 40px 80px; }
+
+.section {
+  margin-bottom: 56px;
+  animation: fadeUp 0.5s ease both;
+  scroll-margin-top: 56px;
+}
+.exec-summary {
+  scroll-margin-top: 56px;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(20px); }
+  to { opacity:1; transform: translateY(0); }
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--section-num);
+  opacity: 0.7;
+  min-width: 48px;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Chart Grid */
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  gap: 24px;
+}
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.chart-card:hover {
+  border-color: rgba(66,66,66,0.3);
+  box-shadow: 0 4px 24px rgba(66,66,66,0.08);
+}
+.chart-card.wide {
+  grid-column: 1 / -1;
+}
+.chart-question {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.chart-type-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #424242;
+  background: rgba(66,66,66,0.08);
+  padding: 2px 10px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+.chart-container.pie-container {
+  max-width: 360px;
+  margin: 0 auto;
+}
+.chart-container canvas {
+  width: 100% !important;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .hero { padding: 32px 20px 28px; }
+  .hero h1 { font-size: 20px; }
+  .nav { padding: 0 16px; }
+  .content { padding: 24px 16px 60px; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .exec-inner { padding: 24px 16px 32px; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .insight-grid { grid-template-columns: 1fr; }
+}
+
+/* Executive Summary */
+.exec-summary {
+  background: linear-gradient(135deg, #FAFAFA 0%, #EEEEEE 100%);
+  border-bottom: 1px solid var(--border);
+}
+.exec-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 40px 56px;
+}
+.exec-header {
+  margin-bottom: 36px;
+}
+.exec-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #757575;
+  margin-bottom: 8px;
+}
+.exec-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.exec-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 640px;
+}
+
+/* KPI Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.kpi-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.kpi-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 36px;
+  font-weight: 700;
+  color: #424242;
+  line-height: 1.1;
+}
+.kpi-unit {
+  font-size: 18px;
+  font-weight: 500;
+  margin-left: 2px;
+}
+.kpi-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* Insight Cards */
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.insight-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  transition: box-shadow 0.3s;
+}
+.insight-card:hover {
+  box-shadow: 0 4px 16px rgba(66,66,66,0.08);
+}
+.insight-card.wide {
+  grid-column: 1 / -1;
+}
+.insight-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface2);
+  border-radius: 10px;
+}
+.insight-content h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.insight-content p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+.insight-content strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Service Acceptability Section */
+.svc-section {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+}
+.svc-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 40px 56px;
+}
+.svc-overview-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 28px;
+}
+.svc-overview-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.svc-overview-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.svc-bar-row {
+  display: grid;
+  grid-template-columns: 220px 1fr 260px;
+  align-items: center;
+  gap: 14px;
+}
+.svc-bar-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+}
+.svc-bar-track {
+  height: 34px;
+  background: var(--surface2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.svc-bar-fill {
+  height: 100%;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 12px;
+  transition: width 0.8s ease;
+}
+.svc-bar-fill span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+.svc-color-1 { background: linear-gradient(90deg, #424242, #616161); }
+.svc-color-2 { background: linear-gradient(90deg, #616161, #757575); }
+.svc-color-3 { background: linear-gradient(90deg, #757575, #9E9E9E); }
+.svc-color-4 { background: linear-gradient(90deg, #9E9E9E, #BDBDBD); }
+.svc-bar-detail {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Cross-analysis cards */
+.svc-cross-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.svc-cross-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.svc-cross-card.wide {
+  grid-column: 1 / -1;
+}
+.svc-cross-header {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 18px;
+  align-items: flex-start;
+}
+.svc-cross-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface2);
+  border-radius: 10px;
+}
+.svc-cross-header h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.svc-cross-insight {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Tables */
+.svc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+.svc-table thead th {
+  background: var(--surface);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 2px solid var(--border);
+}
+.svc-table thead th:first-child {
+  text-align: left;
+  border-radius: 8px 0 0 0;
+}
+.svc-table thead th:last-child {
+  border-radius: 0 8px 0 0;
+}
+.svc-table tbody td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid var(--surface2);
+  color: var(--text);
+}
+.svc-table tbody td:first-child {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.svc-highlight {
+  font-weight: 700 !important;
+  color: #424242 !important;
+  background: rgba(66,66,66,0.08);
+}
+.svc-low {
+  color: #757575 !important;
+  background: rgba(238,238,238,0.6);
+}
+.svc-diff-up {
+  font-weight: 700 !important;
+  color: #424242 !important;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+.svc-takeaway {
+  font-size: 13px;
+  color: var(--text);
+  background: linear-gradient(90deg, rgba(66,66,66,0.06), rgba(66,66,66,0.02));
+  border-left: 3px solid #424242;
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  line-height: 1.7;
+}
+@media (max-width: 600px) {
+  .svc-inner { padding: 24px 16px 32px; }
+  .svc-cross-grid { grid-template-columns: 1fr; }
+  .svc-bar-row { grid-template-columns: 1fr; gap: 4px; }
+  .svc-bar-label { text-align: left; }
+  .svc-bar-detail { font-size: 11px; }
+  .svc-table { font-size: 11px; }
+  .svc-table thead th, .svc-table tbody td { padding: 8px 6px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">Survey Report</div>
+  <h1>請求・経理業務アンケート 結果レポート</h1>
+  <div class="hero-meta">
+    <span>回答数 68件</span>
+    <span>全6セクション・20設問</span>
+    <span>2026年4月実施</span>
+  </div>
+</div>
+
+<nav class="nav" id="nav"></nav>
+
+<!-- Executive Summary -->
+<div class="exec-summary" id="section-summary">
+  <div class="exec-inner">
+    <div class="exec-header">
+      <div class="exec-label">Executive Summary</div>
+      <h2 class="exec-title">エグゼクティブサマリ</h2>
+      <p class="exec-subtitle">TERMINAL 利用企業 68社から得られた、請求・経理業務と支払い実務に関する実態調査結果</p>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-value">68<span class="kpi-unit">社</span></div>
+        <div class="kpi-label">有効回答数</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">66<span class="kpi-unit">%</span></div>
+        <div class="kpi-label">回答者が経営層以上</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">59<span class="kpi-unit">%</span></div>
+        <div class="kpi-label">経理業務に課題あり</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">53<span class="kpi-unit">%</span></div>
+        <div class="kpi-label">支払いトラブル経験あり</div>
+      </div>
+    </div>
+
+    <!-- Insight Blocks -->
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="insight-icon">👤</div>
+        <div class="insight-content">
+          <h3>回答者プロファイル</h3>
+          <p>回答者の<strong>66%が経営層・役員クラス</strong>、<strong>87%が勤続5年以上</strong>。担当業務は<strong>商品仕入れ94%</strong>に加え、経営53%・経理37%・請求処理32%と多岐にわたり、小規模組織で業務が兼務されている構造がうかがえる。関東34%、中国・四国18%と地域分布は幅広い。</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">🛒</div>
+        <div class="insight-content">
+          <h3>仕入・発注の実態</h3>
+          <p>年間仕入額は<strong>1000万円以上が68%</strong>を占め、1億円以上も22%に達する。TERMINALの利用比率は<strong>30%以下が69%</strong>と、既存顧客でも仕入全体の一部にとどまっており、TERMINAL以外の発注手段として<strong>「エクセルとメール」が79%</strong>で圧倒的な一方、DEXTRE・JOORも各26%で併存している。</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">💳</div>
+        <div class="insight-content">
+          <h3>支払い手段の現状</h3>
+          <p>法人カード利用は<strong>35%</strong>にとどまり、未利用層の<strong>61%は「利用する習慣がない」</strong>、27%は「取引先が対応していない」と回答。掛け払いサービスも<strong>60%が未利用</strong>で、18%は存在自体を認知していない。支払い手段のデジタル化は未成熟で、業界全体の伸びしろが大きい。</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">⚠️</div>
+        <div class="insight-content">
+          <h3>経理業務の痛点</h3>
+          <p>経理課題トップは<strong>「請求書の確認・入力・振込手続きに時間がかかる」35%</strong>、次いで「人為ミスの発生」24%、「支払いスケジュール管理」19%。支払いトラブル経験者は53%にのぼり、<strong>「支払い遅延」「金額誤り」が各38%</strong>、「二重支払い」も18%。支払期限延長の依頼経験は32%。</p>
+        </div>
+      </div>
+      <div class="insight-card wide">
+        <div class="insight-icon">💡</div>
+        <div class="insight-content">
+          <h3>示唆：TERMINAL が解決できる 3 つの領域</h3>
+          <p>（1）<strong>発注手段の統合</strong> — エクセル/メール発注が79%残存しており、請求書処理の時間課題（35%）と人為ミス（24%）の根本原因と推定される。TERMINAL への発注集約が経理工数削減に直結する。（2）<strong>支払い手段の拡張</strong> — 法人カード未利用65%・掛け払い未利用60%は、導入障壁が「習慣」と「認知」にあることから、取引先側の対応促進と啓発で拡大余地が大きい。（3）<strong>経理・資金繰りサービスの空白</strong> — 請求書受領サービス未利用71%、資金繰り改善サービス未利用88%と圧倒的な空白領域があり、TERMINAL が提供・接続する BtoB 金融機能の潜在市場は極めて大きい。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service Acceptability -->
+<div class="svc-section" id="section-services">
+  <div class="svc-inner">
+    <div class="exec-header">
+      <div class="exec-label">Service Acceptability</div>
+      <h2 class="exec-title">請求書受領・資金繰り改善サービスの受容性</h2>
+      <p class="exec-subtitle">現行の導入状況と、課題を抱えながら未導入にとどまる「潜在ニーズ層」の規模を可視化</p>
+    </div>
+
+    <!-- Overview: 利用状況の全体像 -->
+    <div class="svc-overview-card">
+      <h3>利用状況サマリ（n=68）</h3>
+      <div class="svc-overview-bars">
+        <div class="svc-bar-row">
+          <div class="svc-bar-label">請求書受領サービス<br><span style="font-weight:400;color:var(--text-muted);font-size:11px;">利用中＋検討中</span></div>
+          <div class="svc-bar-track">
+            <div class="svc-bar-fill svc-color-1" style="width:29%">
+              <span>29%</span>
+            </div>
+          </div>
+          <div class="svc-bar-detail">利用中 18 ／ 検討中 2 ／ 未利用 48</div>
+        </div>
+        <div class="svc-bar-row">
+          <div class="svc-bar-label">資金繰り改善サービス<br><span style="font-weight:400;color:var(--text-muted);font-size:11px;">利用中＋検討中</span></div>
+          <div class="svc-bar-track">
+            <div class="svc-bar-fill svc-color-3" style="width:18%">
+              <span>18%</span>
+            </div>
+          </div>
+          <div class="svc-bar-detail">利用中 9 ／ 検討中 2 ／ 未利用 60</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cross-analysis cards -->
+    <div class="svc-cross-grid">
+
+      <!-- Card 1: 請求書受領サービス - 経理課題別 -->
+      <div class="svc-cross-card">
+        <div class="svc-cross-header">
+          <div class="svc-cross-icon">📄</div>
+          <div>
+            <h4>請求書受領サービス：経理課題あり層が潜在市場</h4>
+            <p class="svc-cross-insight">経理課題を抱える層のうち 70% が未導入。即時の訴求対象が明確</p>
+          </div>
+        </div>
+        <table class="svc-table">
+          <thead>
+            <tr><th>セグメント</th><th>利用中</th><th>検討中</th><th>未利用</th><th>未利用率</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>経理課題あり（n=40）</td><td>10（25%）</td><td>2（5%）</td><td class="svc-highlight">28（70%）</td><td class="svc-diff-up">70%</td></tr>
+            <tr><td>経理課題なし（n=28）</td><td>8（29%）</td><td>0（0%）</td><td>20（71%）</td><td>71%</td></tr>
+          </tbody>
+        </table>
+        <div class="svc-takeaway">💡 「請求書処理に時間がかかる」「人為ミス」など明確なペインを持つ <strong>28社</strong> が請求書受領サービスを未導入。最も即効性の高いターゲット層。</div>
+      </div>
+
+      <!-- Card 2: 請求書受領サービス - 利用サービス内訳 -->
+      <div class="svc-cross-card">
+        <div class="svc-cross-header">
+          <div class="svc-cross-icon">🏢</div>
+          <div>
+            <h4>導入済み企業のサービス内訳</h4>
+            <p class="svc-cross-insight">請求書受領サービス利用中の18社が使っているサービス（複数回答）</p>
+          </div>
+        </div>
+        <table class="svc-table">
+          <thead>
+            <tr><th>サービス</th><th>件数</th><th>利用企業内シェア<br><span style="font-weight:400;font-size:10px;color:#9E9E9E;">n=18</span></th></tr>
+          </thead>
+          <tbody>
+            <tr><td>BtoBプラットフォーム 請求書</td><td>9</td><td class="svc-highlight">50%</td></tr>
+            <tr><td>その他</td><td>7</td><td>39%</td></tr>
+            <tr><td>バクラク請求書受取</td><td>2</td><td>11%</td></tr>
+            <tr><td>BillOne</td><td>2</td><td>11%</td></tr>
+          </tbody>
+        </table>
+        <div class="svc-takeaway">💡 BtoBプラットフォームが半数を占めデファクト。「その他」も39%あり、業界特化の請求書基盤需要が存在。</div>
+      </div>
+
+      <!-- Card 3: 資金繰り改善 - 支払期限延長経験別 -->
+      <div class="svc-cross-card">
+        <div class="svc-cross-header">
+          <div class="svc-cross-icon">💰</div>
+          <div>
+            <h4>資金繰り改善サービス：延長依頼経験者に刺さる</h4>
+            <p class="svc-cross-insight">支払期限の延長を依頼した経験がある層のうち 82% が未導入</p>
+          </div>
+        </div>
+        <table class="svc-table">
+          <thead>
+            <tr><th>セグメント</th><th>利用中</th><th>検討中</th><th>未利用</th><th>未利用率</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>延長依頼あり（n=22）</td><td>3（14%）</td><td>1（5%）</td><td class="svc-highlight">18（82%）</td><td class="svc-diff-up">82%</td></tr>
+            <tr><td>延長依頼なし（n=46）</td><td>3（7%）</td><td>1（2%）</td><td>42（91%）</td><td>91%</td></tr>
+          </tbody>
+        </table>
+        <div class="svc-takeaway">💡 資金繰りに実際に困った経験が示唆される <strong>延長依頼あり層の18社</strong> が資金繰り改善サービスを未導入。最も顕在化したニーズ。</div>
+      </div>
+
+      <!-- Card 4: 資金繰り改善 - トラブル経験別 -->
+      <div class="svc-cross-card">
+        <div class="svc-cross-header">
+          <div class="svc-cross-icon">⚠️</div>
+          <div>
+            <h4>支払いトラブル経験別の未導入率</h4>
+            <p class="svc-cross-insight">トラブル経験者の方が未導入率は僅かに低いが、依然として大半が空白</p>
+          </div>
+        </div>
+        <table class="svc-table">
+          <thead>
+            <tr><th>セグメント</th><th colspan="2">請求書受領サービス<br><span style="font-weight:400;font-size:10px;color:#9E9E9E;">未利用率</span></th><th colspan="2">資金繰り改善サービス<br><span style="font-weight:400;font-size:10px;color:#9E9E9E;">未利用率</span></th></tr>
+          </thead>
+          <tbody>
+            <tr><td>トラブル経験あり（n=36）</td><td colspan="2" class="svc-highlight">67%（24社）</td><td colspan="2" class="svc-highlight">86%（31社）</td></tr>
+            <tr><td>トラブル経験なし（n=32）</td><td colspan="2">75%（24社）</td><td colspan="2">91%（29社）</td></tr>
+          </tbody>
+        </table>
+        <div class="svc-takeaway">💡 トラブル経験の有無でサービス導入率に大差はない。「課題を認識しているが手段に到達していない」構造がうかがえる。</div>
+      </div>
+
+      <!-- Card 5: 統合的な示唆 -->
+      <div class="svc-cross-card wide">
+        <div class="svc-cross-header">
+          <div class="svc-cross-icon">🎯</div>
+          <div>
+            <h4>潜在ニーズ層の規模と優先順位</h4>
+            <p class="svc-cross-insight">顕在化したペインを持ちつつサービス未導入の層を、優先度の高い順に整理</p>
+          </div>
+        </div>
+        <table class="svc-table">
+          <thead>
+            <tr><th>優先度</th><th>ターゲット層</th><th>対象サービス</th><th>該当社数</th><th>全体比</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="svc-highlight">高</td><td>経理課題あり × 請求書受領サービス未利用</td><td>請求書受領</td><td class="svc-highlight">28社</td><td>41%</td></tr>
+            <tr><td class="svc-highlight">高</td><td>支払期限延長依頼経験あり × 資金繰り改善サービス未利用</td><td>資金繰り改善</td><td class="svc-highlight">18社</td><td>26%</td></tr>
+            <tr><td>中</td><td>支払いトラブル経験あり × 請求書受領サービス未利用</td><td>請求書受領</td><td>24社</td><td>35%</td></tr>
+            <tr><td>中</td><td>支払いトラブル経験あり × 資金繰り改善サービス未利用</td><td>資金繰り改善</td><td>31社</td><td>46%</td></tr>
+          </tbody>
+        </table>
+        <div class="svc-takeaway">💡 <strong>請求書受領サービスの優先ターゲットは「経理課題あり × 未利用」の28社（41%）</strong>、<strong>資金繰り改善サービスは「支払期限延長依頼あり × 未利用」の18社（26%）</strong>。どちらも顕在化したペインを持つ層で、サービスの存在を認知するだけで導入に至る可能性が高い。TERMINAL からの提案・情報提供の費用対効果が最も高いセグメント。</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="content" id="content"></div>
+
+<script>
+const SURVEY_DATA = {
+  "total": 68,
+  "sections": [
+    {
+      "id": 1,
+      "title": "回答者属性",
+      "questions": [
+        {
+          "q": "あなたの役職を教えてください",
+          "type": "pie",
+          "data": [
+            {
+              "label": "経営層・役員クラス",
+              "count": 41
+            },
+            {
+              "label": "部長クラス",
+              "count": 3
+            },
+            {
+              "label": "課長クラス",
+              "count": 1
+            },
+            {
+              "label": "係長・主任クラス",
+              "count": 4
+            },
+            {
+              "label": "一般社員クラス",
+              "count": 19
+            }
+          ]
+        },
+        {
+          "q": "あなたの担当業務を教えてください（複数選択可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "商品仕入れ",
+              "count": 64
+            },
+            {
+              "label": "経営",
+              "count": 36
+            },
+            {
+              "label": "経理",
+              "count": 25
+            },
+            {
+              "label": "請求処理",
+              "count": 22
+            }
+          ]
+        },
+        {
+          "q": "現在お勤めの会社の勤続年数を教えてください",
+          "type": "pie",
+          "data": [
+            {
+              "label": "1年未満",
+              "count": 1
+            },
+            {
+              "label": "1〜3年",
+              "count": 3
+            },
+            {
+              "label": "3年〜5年",
+              "count": 5
+            },
+            {
+              "label": "5年以上",
+              "count": 59
+            }
+          ]
+        },
+        {
+          "q": "事業を展開しているエリアを教えてください",
+          "type": "bar",
+          "data": [
+            {
+              "label": "北海道・東北",
+              "count": 5
+            },
+            {
+              "label": "関東",
+              "count": 23
+            },
+            {
+              "label": "北陸・甲信越",
+              "count": 5
+            },
+            {
+              "label": "東海",
+              "count": 8
+            },
+            {
+              "label": "関西",
+              "count": 8
+            },
+            {
+              "label": "中国・四国",
+              "count": 12
+            },
+            {
+              "label": "九州・沖縄",
+              "count": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "仕入構造とTERMINAL利用状況",
+      "questions": [
+        {
+          "q": "貴社の仕入れ金額（年間）を教えてください",
+          "type": "bar",
+          "data": [
+            {
+              "label": "100万円以下",
+              "count": 1
+            },
+            {
+              "label": "100万円〜500万円",
+              "count": 8
+            },
+            {
+              "label": "500万円〜1000万円",
+              "count": 13
+            },
+            {
+              "label": "1000万円〜3000万円",
+              "count": 19
+            },
+            {
+              "label": "3000万円〜5000万円",
+              "count": 4
+            },
+            {
+              "label": "5000万円〜1億円",
+              "count": 8
+            },
+            {
+              "label": "1億円以上",
+              "count": 15
+            }
+          ]
+        },
+        {
+          "q": "貴社の仕入れのうち、TERMINALを利用している割合について教えてください",
+          "type": "bar",
+          "data": [
+            {
+              "label": "10%",
+              "count": 18
+            },
+            {
+              "label": "20%",
+              "count": 15
+            },
+            {
+              "label": "30%",
+              "count": 14
+            },
+            {
+              "label": "40%",
+              "count": 9
+            },
+            {
+              "label": "50%",
+              "count": 4
+            },
+            {
+              "label": "60%",
+              "count": 4
+            },
+            {
+              "label": "70%",
+              "count": 2
+            },
+            {
+              "label": "90%",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "q": "TERMINAL以外の注文方法を利用している場合、どのようなものを利用していますか？（複数選択可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "エクセルとメール",
+              "count": 54
+            },
+            {
+              "label": "DEXTRE",
+              "count": 18
+            },
+            {
+              "label": "JOOR",
+              "count": 18
+            },
+            {
+              "label": "その他",
+              "count": 17
+            },
+            {
+              "label": "自社の仕組みやサービス",
+              "count": 10
+            },
+            {
+              "label": "利用していない",
+              "count": 7
+            },
+            {
+              "label": "Bカート",
+              "count": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "掛け払いサービスの利用状況",
+      "questions": [
+        {
+          "q": "掛け払いサービス経由で請求書の受領・支払いを行ったことがありますか？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "利用したことがある",
+              "count": 15
+            },
+            {
+              "label": "利用したことがない",
+              "count": 41
+            },
+            {
+              "label": "わからない",
+              "count": 12
+            }
+          ]
+        },
+        {
+          "q": "利用したことのある掛け払いサービスを教えてください（n=15・複数選択可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "NP掛け払い",
+              "count": 7
+            },
+            {
+              "label": "Paid",
+              "count": 5
+            },
+            {
+              "label": "クロネコ掛け払い",
+              "count": 4
+            },
+            {
+              "label": "マネーフォワードケッサイ",
+              "count": 2
+            },
+            {
+              "label": "GMO掛け払い",
+              "count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "法人カードの利用状況",
+      "questions": [
+        {
+          "q": "取引先への支払に法人カードを利用していますか？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "すべての支払いに法人カードを利用している",
+              "count": 3
+            },
+            {
+              "label": "商品仕入れの支払いに法人カードを利用している",
+              "count": 12
+            },
+            {
+              "label": "商品仕入れ以外の支払いに法人カードを利用している",
+              "count": 9
+            },
+            {
+              "label": "法人カードは利用していない",
+              "count": 44
+            }
+          ]
+        },
+        {
+          "q": "法人カードを何枚利用していますか？（n=24）",
+          "type": "pie",
+          "data": [
+            {
+              "label": "1枚",
+              "count": 16
+            },
+            {
+              "label": "2枚",
+              "count": 3
+            },
+            {
+              "label": "3枚以上",
+              "count": 5
+            }
+          ]
+        },
+        {
+          "q": "法人カードを利用している理由を教えてください（n=24・複数選択可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "銀行振り込み等の手間が省ける",
+              "count": 11
+            },
+            {
+              "label": "現金支払いに比べ、支払いサイクルを長くできる",
+              "count": 9
+            },
+            {
+              "label": "法人カード付帯のポイントが貯まる",
+              "count": 8
+            },
+            {
+              "label": "支払い履歴を管理できる",
+              "count": 6
+            },
+            {
+              "label": "取引先の指定により利用している",
+              "count": 5
+            }
+          ]
+        },
+        {
+          "q": "法人カードを利用していない理由は何ですか？（n=44・複数選択可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "法人カードを利用する習慣がない",
+              "count": 27
+            },
+            {
+              "label": "取引先が対応していない",
+              "count": 12
+            },
+            {
+              "label": "法人カードの管理 (社員への配布など) が大変",
+              "count": 4
+            },
+            {
+              "label": "年会費が高い",
+              "count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "経理業務の課題・支払いトラブル",
+      "questions": [
+        {
+          "q": "経理業務に関する課題を教えてください（複数選択可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "特にない",
+              "count": 28
+            },
+            {
+              "label": "請求書の確認、入力、振込手続きなどに時間がかかる",
+              "count": 24
+            },
+            {
+              "label": "入力ミス、計算ミスなど、人為的なミスが発生している",
+              "count": 16
+            },
+            {
+              "label": "支払いスケジュールの管理が難しい",
+              "count": 13
+            },
+            {
+              "label": "専任の経理担当がいない",
+              "count": 12
+            },
+            {
+              "label": "社内の支払いワークフローが煩雑",
+              "count": 10
+            },
+            {
+              "label": "電子帳簿保存法など法改正への対応",
+              "count": 8
+            },
+            {
+              "label": "複数のシステム間で連携ができていない",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "q": "取引先との支払いでトラブルになったことはありますか？（複数選択可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "トラブルになったことはない",
+              "count": 32
+            },
+            {
+              "label": "支払いの遅延が発生した",
+              "count": 26
+            },
+            {
+              "label": "支払い金額が間違っていた",
+              "count": 26
+            },
+            {
+              "label": "二重支払いをしてしまった",
+              "count": 12
+            },
+            {
+              "label": "請求書を紛失してしまった",
+              "count": 7
+            }
+          ]
+        },
+        {
+          "q": "支払い期限の延長を依頼したことはありますか？",
+          "type": "pie",
+          "data": [
+            {
+              "label": "はい",
+              "count": 22
+            },
+            {
+              "label": "いいえ",
+              "count": 46
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "利用システム・サービスの状況",
+      "questions": [
+        {
+          "q": "利用している会計システムを教えてください（複数選択可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "利用していない",
+              "count": 22
+            },
+            {
+              "label": "その他",
+              "count": 17
+            },
+            {
+              "label": "弥生会計",
+              "count": 12
+            },
+            {
+              "label": "freee会計",
+              "count": 9
+            },
+            {
+              "label": "マネーフォワード クラウド会計",
+              "count": 5
+            },
+            {
+              "label": "自社開発システム",
+              "count": 4
+            },
+            {
+              "label": "勘定奉行",
+              "count": 3
+            },
+            {
+              "label": "利用を検討している",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "q": "会計システム以外に利用しているシステムはありますか？（複数選択可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "利用していない",
+              "count": 36
+            },
+            {
+              "label": "POSレジ",
+              "count": 23
+            },
+            {
+              "label": "販売管理システム",
+              "count": 11
+            },
+            {
+              "label": "その他",
+              "count": 6
+            },
+            {
+              "label": "経営管理システム",
+              "count": 4
+            },
+            {
+              "label": "基幹システム（ERP）",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "q": "利用している請求書受領サービスを教えてください（複数選択可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "利用していない",
+              "count": 48
+            },
+            {
+              "label": "BtoBプラットフォーム 請求書",
+              "count": 9
+            },
+            {
+              "label": "その他",
+              "count": 7
+            },
+            {
+              "label": "利用を検討している",
+              "count": 2
+            },
+            {
+              "label": "バクラク請求書受取",
+              "count": 2
+            },
+            {
+              "label": "BillOne",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "q": "利用している資金繰り改善サービスを教えてください（複数選択可）",
+          "type": "bar",
+          "data": [
+            {
+              "label": "利用していない",
+              "count": 60
+            },
+            {
+              "label": "その他",
+              "count": 9
+            },
+            {
+              "label": "利用を検討している",
+              "count": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+const COLORS = {
+  bar: ['#424242','#616161','#757575','#9E9E9E','#BDBDBD','#616161','#757575','#9E9E9E'],
+  pie: ['#424242','#616161','#757575','#9E9E9E','#BDBDBD','#616161','#757575','#9E9E9E'],
+  stacked: ['#424242','#757575','#BDBDBD']
+};
+
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const navH = document.getElementById('nav').offsetHeight;
+  const top = el.getBoundingClientRect().top + window.pageYOffset - navH;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
+function buildNav() {
+  const nav = document.getElementById('nav');
+
+  function makeLink(href, text, active) {
+    const a = document.createElement('a');
+    a.href = href;
+    a.textContent = text;
+    if (active) a.classList.add('active');
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      scrollToSection(href.slice(1));
+      try { history.pushState(null, '', href); } catch(e) {}
+    });
+    return a;
+  }
+
+  nav.appendChild(makeLink('#section-summary', 'Summary', true));
+  nav.appendChild(makeLink('#section-services', 'Services', false));
+  SURVEY_DATA.sections.forEach(s => {
+    nav.appendChild(makeLink('#section-' + s.id, s.id + '. ' + s.title, false));
+  });
+}
+
+function createBarChart(canvas, q) {
+  const ctx = canvas.getContext('2d');
+  const labels = q.data.map(d => d.label);
+  const counts = q.data.map(d => d.count);
+  const total = counts.reduce((a,b) => a+b, 0);
+  const isHorizontal = labels.some(l => l.length > 8) || labels.length > 4;
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: counts,
+        backgroundColor: COLORS.bar.slice(0, counts.length).map(c => c + 'cc'),
+        borderColor: COLORS.bar.slice(0, counts.length),
+        borderWidth: 1,
+        borderRadius: 6,
+        barPercentage: 0.7,
+      }]
+    },
+    options: {
+      indexAxis: isHorizontal ? 'y' : 'x',
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: isHorizontal ? Math.max(1.2, 0.4 * labels.length + 0.4) : 1.6,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx2 => {
+              const v = ctx2.raw;
+              return v + '件（' + Math.round(v/total*100) + '%）';
+            }
+          }
+        },
+        datalabels: false
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          ticks: { color: '#757575', font: { size: 11, family: "'Noto Sans JP'" } },
+          ...(isHorizontal ? {} : { beginAtZero: true })
+        },
+        y: {
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          ticks: { color: '#757575', font: { size: 11, family: "'Noto Sans JP'" } },
+          ...(isHorizontal ? { beginAtZero: true } : {})
+        }
+      }
+    },
+    plugins: [{
+      afterDatasetsDraw(chart) {
+        const ctx3 = chart.ctx;
+        chart.data.datasets[0].data.forEach((val, i) => {
+          const meta = chart.getDatasetMeta(0).data[i];
+          const pct = Math.round(val/total*100);
+          ctx3.save();
+          ctx3.fillStyle = '#424242';
+          ctx3.font = "600 11px 'Noto Sans JP'";
+          if (isHorizontal) {
+            ctx3.textAlign = 'left';
+            ctx3.textBaseline = 'middle';
+            ctx3.fillText(val + '件（' + pct + '%）', meta.x + 8, meta.y);
+          } else {
+            ctx3.textAlign = 'center';
+            ctx3.textBaseline = 'bottom';
+            ctx3.fillText(val + '件', meta.x, meta.y - 6);
+          }
+          ctx3.restore();
+        });
+      }
+    }]
+  });
+}
+
+function createPieChart(canvas, q) {
+  const ctx = canvas.getContext('2d');
+  const labels = q.data.map(d => d.label);
+  const counts = q.data.map(d => d.count);
+  const total = counts.reduce((a,b) => a+b, 0);
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: counts,
+        backgroundColor: COLORS.pie.slice(0, counts.length),
+        borderColor: '#FAFAFA',
+        borderWidth: 3,
+        hoverOffset: 8,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1.1,
+      cutout: '55%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#424242',
+            font: { size: 13, family: "'Noto Sans JP'", weight: 500 },
+            padding: 16,
+            usePointStyle: true,
+            pointStyle: 'rectRounded',
+            generateLabels: (chart) => {
+              const ds = chart.data.datasets[0];
+              return chart.data.labels.map((label, i) => ({
+                text: label + '：' + ds.data[i] + '件（' + Math.round(ds.data[i]/total*100) + '%）',
+                fillStyle: ds.backgroundColor[i],
+                strokeStyle: ds.backgroundColor[i],
+                hidden: false,
+                index: i,
+                pointStyle: 'rectRounded'
+              }));
+            }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx2 => {
+              const v = ctx2.raw;
+              return ctx2.label + '：' + v + '件（' + Math.round(v/total*100) + '%）';
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function render() {
+  buildNav();
+  const content = document.getElementById('content');
+
+  SURVEY_DATA.sections.forEach(section => {
+    const sec = document.createElement('div');
+    sec.className = 'section';
+    sec.id = 'section-' + section.id;
+
+    const header = document.createElement('div');
+    header.className = 'section-header';
+    header.innerHTML = '<div class="section-num">' + String(section.id).padStart(2,'0') + '</div><div class="section-title">' + section.title + '</div>';
+    sec.appendChild(header);
+
+    const grid = document.createElement('div');
+    grid.className = 'chart-grid';
+
+    section.questions.forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'chart-card';
+      if (q.type === 'bar' && q.data.length > 5) card.className += ' wide';
+
+      const qDiv = document.createElement('div');
+      qDiv.className = 'chart-question';
+      qDiv.textContent = 'Q. ' + q.q;
+      card.appendChild(qDiv);
+
+      const badge = document.createElement('div');
+      badge.className = 'chart-type-badge';
+      badge.textContent = q.type === 'pie' ? 'doughnut' : 'bar chart';
+      card.appendChild(badge);
+
+      const container = document.createElement('div');
+      container.className = 'chart-container' + (q.type === 'pie' ? ' pie-container' : '');
+      const canvas = document.createElement('canvas');
+      container.appendChild(canvas);
+      card.appendChild(container);
+      grid.appendChild(card);
+
+      setTimeout(() => {
+        if (q.type === 'pie') createPieChart(canvas, q);
+        else createBarChart(canvas, q);
+      }, 50);
+    });
+
+    sec.appendChild(grid);
+    content.appendChild(sec);
+  });
+
+  // Scroll spy
+  const navLinks = document.querySelectorAll('.nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const target = document.querySelector('.nav a[href="#' + e.target.id + '"]');
+        if (target) target.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  document.querySelectorAll('.section').forEach(s => observer.observe(s));
+  const summaryEl = document.getElementById('section-summary');
+  if (summaryEl) observer.observe(summaryEl);
+  const svcEl = document.getElementById('section-services');
+  if (svcEl) observer.observe(svcEl);
+}
+</script>
+<script>
+  (function() {
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+    s.onload = function() { render(); };
+    document.head.appendChild(s);
+  })();
+</script>
+</body>
+</html>
